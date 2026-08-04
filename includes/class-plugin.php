@@ -462,7 +462,7 @@ final class Plugin {
 				),
 				array(
 					'label'   => esc_html__( 'GitHub backup', 'foundation-elementor-plus' ),
-					'href'    => 'https://github.com/hawks010/foundation-elementor-plus',
+					'href'    => 'https://github.com/Inkfire-limited/foundation-elementor-plus',
 					'target'  => '_blank',
 					'variant' => 'ghost',
 				),

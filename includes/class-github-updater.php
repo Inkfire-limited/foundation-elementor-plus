@@ -130,9 +130,9 @@ final class Github_Updater {
 	 * @return string
 	 */
 	private function get_repository() {
-		$repository = apply_filters( 'foundation_elementor_plus_github_repository', 'hawks010/foundation-elementor-plus' );
+		$repository = apply_filters( 'foundation_elementor_plus_github_repository', 'Inkfire-limited/foundation-elementor-plus' );
 
-		return is_string( $repository ) ? trim( $repository ) : 'hawks010/foundation-elementor-plus';
+		return is_string( $repository ) ? trim( $repository ) : 'Inkfire-limited/foundation-elementor-plus';
 	}
 
 	/**

@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: Foundation Elementor Plus
- * Plugin URI: https://github.com/hawks010/foundation-elementor-plus
+ * Plugin URI: https://github.com/Inkfire-limited/foundation-elementor-plus
  * Description: Modular custom Elementor widgets for Foundation sites.
  * Version: 1.3.46
  * Author: Sonny x Inkfire
  * Text Domain: foundation-elementor-plus
- * Update URI: https://github.com/hawks010/foundation-elementor-plus
+ * Update URI: https://github.com/Inkfire-limited/foundation-elementor-plus
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
