@@ -1,0 +1,14 @@
+# Files excluded from the distributed plugin ZIP.
+.git
+.github
+.gitignore
+.distignore
+docs
+node_modules
+tests
+*.bak
+*.bak-*
+*.bak.*
+*.orig
+*.old
+*.before-*
