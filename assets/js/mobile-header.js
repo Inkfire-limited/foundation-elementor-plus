@@ -1,16 +1,27 @@
 (function () {
+  let observerStarted = false;
+  let healthCheckScheduled = false;
+  let warnedAboutMissingInit = false;
+
   function setupHeader(root) {
+    if (!root || root.dataset.inkfireHeaderInitialized === 'true') {
+      return false;
+    }
+
     const overlay = root.querySelector('.imh-overlay');
     const menu = root.querySelector('.imh-menu');
     const menuToggles = root.querySelectorAll('.imh-menu-toggle');
     const searchToggles = root.querySelectorAll('.imh-search-toggle');
+    const searchSubmitButtons = root.querySelectorAll('.imh-search-submit');
     const searchSheets = root.querySelectorAll('.imh-search-sheet');
     const accordionItems = root.querySelectorAll('[data-accordion-item]');
     const cardItems = root.querySelectorAll('[data-card-item]');
 
     if (!overlay || !menu) {
-      return;
+      return false;
     }
+
+    root.dataset.inkfireHeaderInitialized = 'true';
 
     function clearBodyScrollLock() {
       document.body.style.overflow = '';
@@ -65,6 +76,24 @@
         if (willOpen && !menu.classList.contains('is-open') && this.closest('.imh-menu')) {
           setMenuState(true);
         }
+      });
+    });
+
+    searchSubmitButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        const searchWrap = this.closest('.imh-search-inner');
+        const form = searchWrap ? searchWrap.querySelector('.imh-search-form') : null;
+
+        if (!form) {
+          return;
+        }
+
+        if (typeof form.requestSubmit === 'function') {
+          form.requestSubmit();
+          return;
+        }
+
+        form.submit();
       });
     });
 
@@ -197,15 +226,132 @@
     });
 
     clearBodyScrollLock();
+    return true;
   }
 
-  function init() {
-    document.querySelectorAll('[data-inkfire-header]').forEach(setupHeader);
+  function initAll(scope) {
+    const root = scope || document;
+    let initializedAny = false;
+
+    if (root.matches && root.matches('[data-inkfire-header]')) {
+      initializedAny = setupHeader(root) || initializedAny;
+    }
+
+    root.querySelectorAll('[data-inkfire-header]').forEach(function (headerRoot) {
+      initializedAny = setupHeader(headerRoot) || initializedAny;
+    });
+
+    return initializedAny;
+  }
+
+  function emitInitWarning() {
+    if (warnedAboutMissingInit) {
+      return;
+    }
+
+    warnedAboutMissingInit = true;
+    console.warn('[Inkfire mobile header] Header markup was detected without an initialized controller. Reattempting setup.');
+    document.dispatchEvent(new CustomEvent('inkfire:mobile-header:warning'));
+  }
+
+  function scheduleHealthCheck() {
+    if (healthCheckScheduled) {
+      return;
+    }
+
+    healthCheckScheduled = true;
+
+    window.setTimeout(function () {
+      healthCheckScheduled = false;
+
+      const headers = document.querySelectorAll('[data-inkfire-header]');
+      if (!headers.length) {
+        return;
+      }
+
+      const hasUninitializedHeader = Array.prototype.some.call(headers, function (headerRoot) {
+        return headerRoot.dataset.inkfireHeaderInitialized !== 'true';
+      });
+
+      if (!hasUninitializedHeader) {
+        warnedAboutMissingInit = false;
+        return;
+      }
+
+      emitInitWarning();
+      initAll(document);
+    }, 1200);
+  }
+
+  function startHeaderObserver() {
+    if (observerStarted || typeof MutationObserver === 'undefined' || !document.body) {
+      return;
+    }
+
+    observerStarted = true;
+
+    const observer = new MutationObserver(function (mutations) {
+      let shouldInit = false;
+
+      mutations.forEach(function (mutation) {
+        if (shouldInit) {
+          return;
+        }
+
+        mutation.addedNodes.forEach(function (node) {
+          if (shouldInit || !node || node.nodeType !== 1) {
+            return;
+          }
+
+          if ((node.matches && node.matches('[data-inkfire-header]')) || (node.querySelector && node.querySelector('[data-inkfire-header]'))) {
+            shouldInit = true;
+          }
+        });
+      });
+
+      if (shouldInit) {
+        initAll(document);
+        scheduleHealthCheck();
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', function () {
+      initAll(document);
+      startHeaderObserver();
+      scheduleHealthCheck();
+    });
   } else {
-    init();
+    initAll(document);
+    startHeaderObserver();
+    scheduleHealthCheck();
+  }
+
+  window.addEventListener('load', function () {
+    initAll(document);
+    startHeaderObserver();
+    scheduleHealthCheck();
+  });
+
+  if (window.elementorFrontend && window.elementorFrontend.hooks) {
+    window.elementorFrontend.hooks.addAction('frontend/element_ready/foundation-mobile-header.default', function ($scope) {
+      initAll($scope[0] || $scope);
+      scheduleHealthCheck();
+    });
+  } else {
+    window.addEventListener('elementor/frontend/init', function () {
+      if (window.elementorFrontend && window.elementorFrontend.hooks) {
+        window.elementorFrontend.hooks.addAction('frontend/element_ready/foundation-mobile-header.default', function ($scope) {
+          initAll($scope[0] || $scope);
+          scheduleHealthCheck();
+        });
+      }
+    });
   }
 })();

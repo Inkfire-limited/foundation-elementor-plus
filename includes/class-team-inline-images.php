@@ -655,6 +655,8 @@ final class Team_Inline_Images {
 					const previewLabel = <?php echo wp_json_encode( 'all' === $current_tab ? __( 'Selected team portraits', 'foundation-elementor-plus' ) : sprintf( __( '%s team portraits', 'foundation-elementor-plus' ), $departments[ $current_tab ] ) ); ?>;
 					const replaceText = <?php echo wp_json_encode( __( 'Replace image', 'foundation-elementor-plus' ) ); ?>;
 					const replaceButtonText = <?php echo wp_json_encode( __( 'Use this image', 'foundation-elementor-plus' ) ); ?>;
+					let dragArmedRow = null;
+					let draggedRow = null;
 
 					const renderPreview = () => {
 						const rows = Array.from(list.querySelectorAll('[data-image-id]'));
@@ -672,6 +674,27 @@ final class Team_Inline_Images {
 						}).join('');
 
 						preview.innerHTML = '<span role="img" aria-label="' + previewLabel.replace(/"/g, '&quot;') + '" style="display:inline-flex;vertical-align:middle;align-items:center;margin:0 5px;">' + html + '</span>';
+					};
+
+					const getRows = () => Array.from(list.querySelectorAll('[data-image-id]'));
+
+					const resetDragState = () => {
+						getRows().forEach((row) => {
+							row.setAttribute('draggable', 'false');
+							row.classList.remove('is-sorting');
+						});
+						dragArmedRow = null;
+						draggedRow = null;
+					};
+
+					const armRowForDrag = (row) => {
+						resetDragState();
+						if (!row) {
+							return;
+						}
+
+						row.setAttribute('draggable', 'true');
+						dragArmedRow = row;
 					};
 
 					const escapeHtml = (value) => {
@@ -692,6 +715,7 @@ final class Team_Inline_Images {
 							.split('{{url}}').join(escapeHtml(attachment.url));
 
 						list.insertAdjacentHTML('beforeend', markup);
+						resetDragState();
 						renderPreview();
 					};
 
@@ -702,6 +726,7 @@ final class Team_Inline_Images {
 						row.querySelector('.foundation-team-inline-admin__meta strong').textContent = attachment.title || 'Media image';
 						row.querySelector('.foundation-team-inline-admin__meta span').textContent = attachment.url;
 						row.querySelector('input[type="hidden"]').value = String(attachment.id);
+						resetDragState();
 						renderPreview();
 					};
 
@@ -771,28 +796,73 @@ final class Team_Inline_Images {
 						renderPreview();
 					});
 
-					if (window.jQuery && window.jQuery.fn && window.jQuery.fn.sortable) {
-						window.jQuery(function($) {
-							$(list).sortable({
-								items: '> [data-image-id]',
-								handle: '.foundation-team-inline-admin__drag',
-								cancel: 'input,textarea,select,option,.foundation-team-inline-replace,.foundation-team-inline-remove',
-								placeholder: 'foundation-team-inline-admin__row foundation-team-inline-admin__row--placeholder',
-								forcePlaceholderSize: true,
-								start: function(event, ui) {
-									ui.item.addClass('is-sorting');
-								},
-								stop: function(event, ui) {
-									ui.item.removeClass('is-sorting');
-									renderPreview();
-								},
-								update: function() {
-									renderPreview();
-								}
-							});
-						});
-					}
+					list.addEventListener('pointerdown', function(event) {
+						const handle = event.target.closest('.foundation-team-inline-admin__drag');
+						if (!handle) {
+							return;
+						}
 
+						armRowForDrag(handle.closest('[data-image-id]'));
+					});
+
+					list.addEventListener('dragstart', function(event) {
+						const row = event.target.closest('[data-image-id]');
+						if (!row || row !== dragArmedRow) {
+							event.preventDefault();
+							return;
+						}
+
+						draggedRow = row;
+						row.classList.add('is-sorting');
+
+						if (event.dataTransfer) {
+							event.dataTransfer.effectAllowed = 'move';
+							event.dataTransfer.setData('text/plain', row.getAttribute('data-image-id') || '');
+						}
+					});
+
+					list.addEventListener('dragover', function(event) {
+						if (!draggedRow) {
+							return;
+						}
+
+						event.preventDefault();
+
+						const row = event.target.closest('[data-image-id]');
+						if (!row || row === draggedRow) {
+							return;
+						}
+
+						const rect = row.getBoundingClientRect();
+						const shouldInsertBefore = event.clientY < rect.top + (rect.height / 2);
+						const targetSibling = shouldInsertBefore ? row : row.nextSibling;
+
+						if (targetSibling !== draggedRow) {
+							list.insertBefore(draggedRow, targetSibling);
+						}
+					});
+
+					list.addEventListener('drop', function(event) {
+						if (!draggedRow) {
+							return;
+						}
+
+						event.preventDefault();
+						renderPreview();
+					});
+
+					list.addEventListener('dragend', function() {
+						resetDragState();
+						renderPreview();
+					});
+
+					window.addEventListener('pointerup', function() {
+						if (!draggedRow) {
+							resetDragState();
+						}
+					});
+
+					resetDragState();
 					renderPreview();
 				})();
 			</script>

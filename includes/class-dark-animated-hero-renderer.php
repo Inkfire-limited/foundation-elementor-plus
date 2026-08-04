@@ -446,6 +446,11 @@ final class Dark_Animated_Hero_Renderer {
 				'department' => isset( $a['project_team_department'] ) ? (string) $a['project_team_department'] : '',
 			)
 		);
+		$is_portfolio_editorial = self::is_portfolio_editorial_context( $preset_key, $context_post_id );
+		$portfolio_intro_label  = $is_portfolio_editorial ? self::get_portfolio_editorial_meta_value( $context_post_id, 'hero_intro_label' ) : '';
+		$portfolio_display_title = $is_portfolio_editorial ? self::get_portfolio_editorial_meta_value( $context_post_id, 'hero_display_title' ) : '';
+		$portfolio_details_markup = $is_portfolio_editorial ? self::render_portfolio_editorial_details_card( $context_post_id ) : '';
+		$portfolio_stats_markup   = $is_portfolio_editorial ? self::render_portfolio_editorial_stats_strip( $context_post_id ) : '';
 
 		$class_names = array(
 			'foundation-inkfire-splash',
@@ -515,77 +520,173 @@ final class Dark_Animated_Hero_Renderer {
 						</div>
 					<?php endif; ?>
 
-					<?php if ( $has_blog_post_meta ) : ?>
-						<?php echo wp_kses_post( $blog_post_meta_markup ); ?>
-					<?php endif; ?>
+					<?php if ( $is_portfolio_editorial ) : ?>
+						<div class="foundation-inkfire-portfolio-hero-shell">
+							<div class="foundation-inkfire-portfolio-hero-main">
+								<?php if ( $has_blog_post_meta ) : ?>
+									<?php echo wp_kses_post( $blog_post_meta_markup ); ?>
+								<?php endif; ?>
 
-					<?php if ( $has_eyebrow || $has_kicker ) : ?>
-						<div class="foundation-inkfire-meta-row">
-							<?php if ( $has_kicker ) : ?>
-								<p class="foundation-inkfire-kicker"><?php echo self::kses_hero_html( $kicker_html ); ?></p>
-							<?php endif; ?>
+								<?php if ( $has_eyebrow || $has_kicker ) : ?>
+									<div class="foundation-inkfire-meta-row">
+										<?php if ( $has_kicker ) : ?>
+											<p class="foundation-inkfire-kicker"><?php echo self::kses_hero_html( $kicker_html ); ?></p>
+										<?php endif; ?>
 
-							<?php if ( $has_eyebrow ) : ?>
-								<p class="foundation-inkfire-eyebrow foundation-inkfire-eyebrow--<?php echo esc_attr( sanitize_html_class( str_replace( '_', '-', $eyebrow_style ) ) ); ?>"><?php echo self::kses_hero_html( $eyebrow_html ); ?></p>
+										<?php if ( $has_eyebrow ) : ?>
+											<p class="foundation-inkfire-eyebrow foundation-inkfire-eyebrow--<?php echo esc_attr( sanitize_html_class( str_replace( '_', '-', $eyebrow_style ) ) ); ?>"><?php echo self::kses_hero_html( $eyebrow_html ); ?></p>
+										<?php endif; ?>
+									</div>
+								<?php endif; ?>
+
+								<?php if ( '' !== $portfolio_intro_label ) : ?>
+									<p class="foundation-inkfire-portfolio-intro-label"><?php echo esc_html( $portfolio_intro_label ); ?></p>
+								<?php endif; ?>
+
+								<?php if ( '' !== $portfolio_display_title ) : ?>
+									<p class="foundation-inkfire-portfolio-display-title"><?php echo esc_html( $portfolio_display_title ); ?></p>
+								<?php endif; ?>
+
+								<h1 id="<?php echo esc_attr( $section_id . '-heading' ); ?>" class="foundation-inkfire-headline">
+									<?php echo self::kses_hero_html( $headline_html ); ?>
+								</h1>
+
+								<?php if ( 'after_title' === $feature_position ) : ?>
+									<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
+								<?php endif; ?>
+
+								<?php if ( '' !== trim( wp_strip_all_tags( $subhead_html ) ) ) : ?>
+									<div id="<?php echo esc_attr( $section_id . '-subhead' ); ?>" class="foundation-inkfire-subhead">
+										<?php echo self::kses_hero_html( $subhead_html ); ?>
+									</div>
+								<?php endif; ?>
+
+								<?php if ( $has_blog_post_author ) : ?>
+									<?php echo wp_kses_post( $blog_post_author_markup ); ?>
+								<?php endif; ?>
+
+								<?php if ( 'after_subhead' === $feature_position ) : ?>
+									<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
+								<?php endif; ?>
+
+								<?php if ( 'before_buttons' === $feature_position ) : ?>
+									<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
+								<?php endif; ?>
+
+								<div class="foundation-inkfire-action-row">
+									<div class="foundation-inkfire-button-row">
+										<?php if ( $show_primary_button ) : ?>
+											<a href="<?php echo esc_url( (string) $a['btn_url'] ); ?>" class="foundation-inkfire-main-btn">
+												<span><?php echo esc_html( (string) $a['btn_text'] ); ?></span>
+												<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+													<path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
+												</svg>
+											</a>
+										<?php endif; ?>
+
+										<?php if ( $show_secondary_button ) : ?>
+											<a href="<?php echo esc_url( (string) $a['secondary_url'] ); ?>" class="foundation-inkfire-secondary-btn">
+												<span><?php echo esc_html( (string) $a['secondary_text'] ); ?></span>
+												<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+													<path d="M5 12h14M12 5l7 7-7 7"></path>
+												</svg>
+											</a>
+										<?php endif; ?>
+									</div>
+
+									<?php if ( $show_team ) : ?>
+										<?php echo self::render_team_hero(); ?>
+									<?php endif; ?>
+
+									<?php if ( '' !== $project_team_markup ) : ?>
+										<?php echo wp_kses_post( $project_team_markup ); ?>
+									<?php endif; ?>
+								</div>
+							</div>
+
+							<?php if ( '' !== $portfolio_details_markup ) : ?>
+								<aside class="foundation-inkfire-portfolio-hero-side">
+									<?php echo wp_kses_post( $portfolio_details_markup ); ?>
+								</aside>
 							<?php endif; ?>
 						</div>
-					<?php endif; ?>
 
-					<h1 id="<?php echo esc_attr( $section_id . '-heading' ); ?>" class="foundation-inkfire-headline">
-						<?php echo self::kses_hero_html( $headline_html ); ?>
-					</h1>
-
-					<?php if ( 'after_title' === $feature_position ) : ?>
-						<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
-					<?php endif; ?>
-
-					<?php if ( '' !== trim( wp_strip_all_tags( $subhead_html ) ) ) : ?>
-						<div id="<?php echo esc_attr( $section_id . '-subhead' ); ?>" class="foundation-inkfire-subhead">
-							<?php echo self::kses_hero_html( $subhead_html ); ?>
-						</div>
-					<?php endif; ?>
-
-					<?php if ( $has_blog_post_author ) : ?>
-						<?php echo wp_kses_post( $blog_post_author_markup ); ?>
-					<?php endif; ?>
-
-					<?php if ( 'after_subhead' === $feature_position ) : ?>
-						<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
-					<?php endif; ?>
-
-					<?php if ( 'before_buttons' === $feature_position ) : ?>
-						<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
-					<?php endif; ?>
-
-					<div class="foundation-inkfire-action-row">
-						<div class="foundation-inkfire-button-row">
-							<?php if ( $show_primary_button ) : ?>
-								<a href="<?php echo esc_url( (string) $a['btn_url'] ); ?>" class="foundation-inkfire-main-btn">
-									<span><?php echo esc_html( (string) $a['btn_text'] ); ?></span>
-									<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-										<path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
-									</svg>
-								</a>
-							<?php endif; ?>
-
-							<?php if ( $show_secondary_button ) : ?>
-								<a href="<?php echo esc_url( (string) $a['secondary_url'] ); ?>" class="foundation-inkfire-secondary-btn">
-									<span><?php echo esc_html( (string) $a['secondary_text'] ); ?></span>
-									<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-										<path d="M5 12h14M12 5l7 7-7 7"></path>
-									</svg>
-								</a>
-							<?php endif; ?>
-						</div>
-
-						<?php if ( $show_team ) : ?>
-							<?php echo self::render_team_hero(); ?>
+						<?php if ( '' !== $portfolio_stats_markup ) : ?>
+							<?php echo wp_kses_post( $portfolio_stats_markup ); ?>
+						<?php endif; ?>
+					<?php else : ?>
+						<?php if ( $has_blog_post_meta ) : ?>
+							<?php echo wp_kses_post( $blog_post_meta_markup ); ?>
 						<?php endif; ?>
 
-						<?php if ( '' !== $project_team_markup ) : ?>
-							<?php echo wp_kses_post( $project_team_markup ); ?>
+						<?php if ( $has_eyebrow || $has_kicker ) : ?>
+							<div class="foundation-inkfire-meta-row">
+								<?php if ( $has_kicker ) : ?>
+									<p class="foundation-inkfire-kicker"><?php echo self::kses_hero_html( $kicker_html ); ?></p>
+								<?php endif; ?>
+
+								<?php if ( $has_eyebrow ) : ?>
+									<p class="foundation-inkfire-eyebrow foundation-inkfire-eyebrow--<?php echo esc_attr( sanitize_html_class( str_replace( '_', '-', $eyebrow_style ) ) ); ?>"><?php echo self::kses_hero_html( $eyebrow_html ); ?></p>
+								<?php endif; ?>
+							</div>
 						<?php endif; ?>
-					</div>
+
+						<h1 id="<?php echo esc_attr( $section_id . '-heading' ); ?>" class="foundation-inkfire-headline">
+							<?php echo self::kses_hero_html( $headline_html ); ?>
+						</h1>
+
+						<?php if ( 'after_title' === $feature_position ) : ?>
+							<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
+						<?php endif; ?>
+
+						<?php if ( '' !== trim( wp_strip_all_tags( $subhead_html ) ) ) : ?>
+							<div id="<?php echo esc_attr( $section_id . '-subhead' ); ?>" class="foundation-inkfire-subhead">
+								<?php echo self::kses_hero_html( $subhead_html ); ?>
+							</div>
+						<?php endif; ?>
+
+						<?php if ( $has_blog_post_author ) : ?>
+							<?php echo wp_kses_post( $blog_post_author_markup ); ?>
+						<?php endif; ?>
+
+						<?php if ( 'after_subhead' === $feature_position ) : ?>
+							<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
+						<?php endif; ?>
+
+						<?php if ( 'before_buttons' === $feature_position ) : ?>
+							<?php echo self::render_feature_list( $feature_items, $feature_position ); ?>
+						<?php endif; ?>
+
+						<div class="foundation-inkfire-action-row">
+							<div class="foundation-inkfire-button-row">
+								<?php if ( $show_primary_button ) : ?>
+									<a href="<?php echo esc_url( (string) $a['btn_url'] ); ?>" class="foundation-inkfire-main-btn">
+										<span><?php echo esc_html( (string) $a['btn_text'] ); ?></span>
+										<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+											<path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path>
+										</svg>
+									</a>
+								<?php endif; ?>
+
+								<?php if ( $show_secondary_button ) : ?>
+									<a href="<?php echo esc_url( (string) $a['secondary_url'] ); ?>" class="foundation-inkfire-secondary-btn">
+										<span><?php echo esc_html( (string) $a['secondary_text'] ); ?></span>
+										<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+											<path d="M5 12h14M12 5l7 7-7 7"></path>
+										</svg>
+									</a>
+								<?php endif; ?>
+							</div>
+
+							<?php if ( $show_team ) : ?>
+								<?php echo self::render_team_hero(); ?>
+							<?php endif; ?>
+
+							<?php if ( '' !== $project_team_markup ) : ?>
+								<?php echo wp_kses_post( $project_team_markup ); ?>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
 
 					<?php if ( $has_glass_breadcrumb && 'bottom' === $breadcrumb_position ) : ?>
 						<div class="foundation-inkfire-shortcode-breadcrumb foundation-inkfire-shortcode-breadcrumb--bottom">
@@ -616,12 +717,20 @@ final class Dark_Animated_Hero_Renderer {
 		$context_post_id = self::get_render_context_post_id( $preset_key );
 
 		if ( 'portfolio_post' === $preset_key && $context_post_id && 'ink_portfolio' === get_post_type( $context_post_id ) ) {
+			$portfolio_live_url = self::get_portfolio_editorial_live_site_url( $context_post_id );
+			$portfolio_permalink = (string) get_permalink( $context_post_id );
+			$portfolio_headline = self::get_portfolio_editorial_meta_value( $context_post_id, 'hero_headline' );
+			$portfolio_body     = self::get_portfolio_editorial_meta_value( $context_post_id, 'hero_body' );
 			$preset['kicker']           = '{current_breadcrumb_links}';
 			$preset['eyebrow']          = '{current_portfolio_meta_pills}';
-			$preset['title']            = '{current_title}';
-			$preset['subhead']          = '{current_excerpt}';
+			$preset['title']            = '' !== $portfolio_headline ? $portfolio_headline : '{current_title}';
+			$preset['subhead']          = '' !== $portfolio_body ? $portfolio_body : '{current_excerpt}';
 			$preset['features']         = '';
 			$preset['feature_position'] = 'hidden';
+			$preset['primary_text']     = $portfolio_live_url !== $portfolio_permalink ? 'Visit live site' : 'View project';
+			$preset['primary_url']      = $portfolio_live_url;
+			$preset['secondary_text']   = 'View all work';
+			$preset['secondary_url']    = home_url( '/portfolio/' );
 		} elseif ( 'blog_post' === $preset_key && $context_post_id && 'post' === get_post_type( $context_post_id ) ) {
 			$preset['kicker']           = '{current_breadcrumb_links}';
 			$preset['eyebrow']          = '';
@@ -1428,6 +1537,229 @@ final class Dark_Animated_Hero_Renderer {
 		$output .= '<a href="' . esc_url( $team_link_url ) . '" class="foundation-inkfire-team-strip-link" aria-label="' . esc_attr__( 'Meet the team', 'foundation-elementor-plus' ) . '">';
 		$output .= $avatars_markup;
 		$output .= '</a>';
+		$output .= '</div>';
+
+		return $output;
+	}
+
+	private static function is_portfolio_editorial_context( $preset_key, $context_post_id = 0 ) {
+		return 'portfolio_post' === $preset_key && $context_post_id > 0 && 'ink_portfolio' === get_post_type( $context_post_id );
+	}
+
+	private static function get_portfolio_editorial_meta_value( $post_id, $field_key ) {
+		return trim( (string) get_post_meta( $post_id, '_ink_portfolio_' . $field_key, true ) );
+	}
+
+	private static function get_portfolio_editorial_live_site_url( $post_id ) {
+		$post_id  = (int) $post_id;
+		$live_url = self::get_portfolio_editorial_meta_value( $post_id, 'hero_live_site_url' );
+
+		if ( '' !== $live_url ) {
+			return $live_url;
+		}
+
+		$card_link_url = trim( (string) get_post_meta( $post_id, '_ink_portfolio_card_link_url', true ) );
+		$permalink     = (string) get_permalink( $post_id );
+
+		if ( '' !== $card_link_url && $card_link_url !== $permalink ) {
+			return $card_link_url;
+		}
+
+		return $permalink;
+	}
+
+	private static function get_portfolio_editorial_link_label( $url ) {
+		$parts = wp_parse_url( (string) $url );
+
+		if ( empty( $parts['host'] ) ) {
+			return wp_strip_all_tags( (string) $url );
+		}
+
+		$host = preg_replace( '/^www\./i', '', (string) $parts['host'] );
+		$path = isset( $parts['path'] ) ? trim( (string) $parts['path'], '/' ) : '';
+
+		if ( '' !== $path ) {
+			return $host . '/' . $path;
+		}
+
+		return $host;
+	}
+
+	private static function render_portfolio_editorial_detail_value( $value ) {
+		$value = trim( (string) $value );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		$lines = preg_split( '/\r\n|\r|\n/', $value );
+		$lines = array_values(
+			array_filter(
+				array_map(
+					static function( $line ) {
+						return trim( (string) $line );
+					},
+					(array) $lines
+				)
+			)
+		);
+
+		if ( empty( $lines ) ) {
+			return esc_html( $value );
+		}
+
+		return implode(
+			'<br>',
+			array_map(
+				'esc_html',
+				$lines
+			)
+		);
+	}
+
+	private static function render_portfolio_editorial_service_value( $value ) {
+		$lines = preg_split( '/\r\n|\r|\n/', trim( (string) $value ) );
+		$lines = array_values(
+			array_filter(
+				array_map(
+					static function( $line ) {
+						return trim( (string) $line );
+					},
+					(array) $lines
+				)
+			)
+		);
+
+		if ( empty( $lines ) ) {
+			return '';
+		}
+
+		return esc_html( implode( ' · ', $lines ) );
+	}
+
+	private static function render_portfolio_editorial_details_card( $post_id ) {
+		if ( $post_id < 1 || 'ink_portfolio' !== get_post_type( $post_id ) ) {
+			return '';
+		}
+
+		$client     = self::get_portfolio_editorial_meta_value( $post_id, 'hero_client' );
+		$industry   = self::get_portfolio_editorial_meta_value( $post_id, 'hero_industry' );
+		$location   = self::get_portfolio_editorial_meta_value( $post_id, 'hero_location' );
+		$services   = self::get_portfolio_editorial_meta_value( $post_id, 'hero_services' );
+		$live_url   = self::get_portfolio_editorial_meta_value( $post_id, 'hero_live_site_url' );
+		$live_label = self::get_portfolio_editorial_meta_value( $post_id, 'hero_live_site_label' );
+		$permalink  = (string) get_permalink( $post_id );
+
+		if ( '' === $client ) {
+			$client = get_the_title( $post_id );
+		}
+
+		if ( '' === $live_url ) {
+			$candidate_url = trim( (string) get_post_meta( $post_id, '_ink_portfolio_card_link_url', true ) );
+
+			if ( '' !== $candidate_url && $candidate_url !== $permalink ) {
+				$live_url = $candidate_url;
+			}
+		}
+
+		if ( '' === $live_label && '' !== $live_url ) {
+			$live_label = self::get_portfolio_editorial_link_label( $live_url );
+		}
+
+		$rows = array(
+			array(
+				'key'   => 'client',
+				'label' => __( 'Client', 'foundation-elementor-plus' ),
+				'value' => $client,
+			),
+			array(
+				'key'   => 'industry',
+				'label' => __( 'Industry', 'foundation-elementor-plus' ),
+				'value' => $industry,
+			),
+			array(
+				'key'   => 'location',
+				'label' => __( 'Location', 'foundation-elementor-plus' ),
+				'value' => $location,
+			),
+			array(
+				'key'   => 'services',
+				'label' => __( 'Services', 'foundation-elementor-plus' ),
+				'value' => $services,
+			),
+		);
+
+		$output = '<div class="foundation-inkfire-portfolio-details-card">';
+		$output .= '<div class="foundation-inkfire-portfolio-details-card__head">';
+		$output .= '<p class="foundation-inkfire-portfolio-details-card__eyebrow">' . esc_html__( 'Project details', 'foundation-elementor-plus' ) . '</p>';
+		$output .= '</div>';
+		$output .= '<div class="foundation-inkfire-portfolio-details-card__body">';
+
+		foreach ( $rows as $row ) {
+			if ( '' === trim( (string) $row['value'] ) ) {
+				continue;
+			}
+
+			$output .= '<div class="foundation-inkfire-portfolio-details-card__row">';
+			$output .= '<span class="foundation-inkfire-portfolio-details-card__label">' . esc_html( (string) $row['label'] ) . '</span>';
+			if ( 'services' === ( $row['key'] ?? '' ) ) {
+				$output .= '<span class="foundation-inkfire-portfolio-details-card__value">' . self::render_portfolio_editorial_service_value( (string) $row['value'] ) . '</span>';
+			} else {
+				$output .= '<span class="foundation-inkfire-portfolio-details-card__value">' . self::render_portfolio_editorial_detail_value( (string) $row['value'] ) . '</span>';
+			}
+			$output .= '</div>';
+		}
+
+		if ( '' !== $live_url ) {
+			$output .= '<div class="foundation-inkfire-portfolio-details-card__row">';
+			$output .= '<span class="foundation-inkfire-portfolio-details-card__label">' . esc_html__( 'Live site', 'foundation-elementor-plus' ) . '</span>';
+			$output .= '<a class="foundation-inkfire-portfolio-details-card__value foundation-inkfire-portfolio-details-card__value--link" href="' . esc_url( $live_url ) . '" target="_blank" rel="noopener">';
+			$output .= esc_html( $live_label );
+			$output .= '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"></path></svg>';
+			$output .= '</a>';
+			$output .= '</div>';
+		}
+
+		$output .= '</div>';
+		$output .= '</div>';
+
+		return $output;
+	}
+
+	private static function render_portfolio_editorial_stats_strip( $post_id ) {
+		if ( $post_id < 1 || 'ink_portfolio' !== get_post_type( $post_id ) ) {
+			return '';
+		}
+
+		$items = array();
+
+		for ( $index = 1; $index <= 5; $index++ ) {
+			$value = self::get_portfolio_editorial_meta_value( $post_id, 'hero_stat_' . $index . '_value' );
+			$label = self::get_portfolio_editorial_meta_value( $post_id, 'hero_stat_' . $index . '_label' );
+
+			if ( '' === $value || '' === $label ) {
+				continue;
+			}
+
+			$items[] = array(
+				'value' => $value,
+				'label' => $label,
+			);
+		}
+
+		if ( empty( $items ) ) {
+			return '';
+		}
+
+		$output = '<div class="foundation-inkfire-portfolio-stats" aria-label="' . esc_attr__( 'Project highlights', 'foundation-elementor-plus' ) . '">';
+
+		foreach ( $items as $item ) {
+			$output .= '<div class="foundation-inkfire-portfolio-stat">';
+			$output .= '<span class="foundation-inkfire-portfolio-stat__value">' . esc_html( (string) $item['value'] ) . '</span>';
+			$output .= '<span class="foundation-inkfire-portfolio-stat__label">' . esc_html( (string) $item['label'] ) . '</span>';
+			$output .= '</div>';
+		}
+
 		$output .= '</div>';
 
 		return $output;

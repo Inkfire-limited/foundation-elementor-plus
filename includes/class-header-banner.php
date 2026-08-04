@@ -109,14 +109,16 @@ final class Header_Banner {
 		}
 
 		$has_button = ! empty( $settings['button_text'] ) && ! empty( $settings['button_url'] );
-		$wrap_class = $is_preview ? 'foundation-header-build-banner-wrap foundation-header-build-banner-wrap--preview' : 'foundation-header-build-banner-wrap';
+		$wrap_class   = $is_preview ? 'foundation-header-build-banner-wrap foundation-header-build-banner-wrap--preview' : 'foundation-header-build-banner-wrap';
+		$inner_class  = 'foundation-header-build-banner__inner' . ( $has_button ? '' : ' foundation-header-build-banner__inner--no-button' );
+		$copy_class   = 'foundation-header-build-banner__copy' . ( $has_button ? '' : ' foundation-header-build-banner__copy--no-button' );
 
 		ob_start();
 		?>
 		<div class="<?php echo esc_attr( $wrap_class ); ?>">
 			<div class="foundation-header-build-banner" role="status" aria-live="polite">
-				<div class="foundation-header-build-banner__inner">
-					<div class="foundation-header-build-banner__copy">
+				<div class="<?php echo esc_attr( $inner_class ); ?>">
+					<div class="<?php echo esc_attr( $copy_class ); ?>">
 						<?php if ( ! empty( $settings['label'] ) ) : ?>
 							<span class="foundation-header-build-banner__label"><?php echo esc_html( $settings['label'] ); ?></span>
 						<?php endif; ?>
@@ -199,6 +201,16 @@ final class Header_Banner {
 				align-items: center;
 				gap: 0.85rem;
 				min-width: 0;
+			}
+
+			.foundation-header-build-banner__inner--no-button {
+				justify-content: center;
+			}
+
+			.foundation-header-build-banner__copy--no-button {
+				flex: 1 1 auto;
+				justify-content: center;
+				text-align: center;
 			}
 
 			.foundation-header-build-banner__label {

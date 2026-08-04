@@ -62,7 +62,7 @@ if ( ! function_exists( 'amh_social_quicklinks_awards' ) ) {
 			),
 			array(
 				'src'   => home_url( '/wp-content/uploads/2025/11/dc_badge1.png' ),
-				'alt'   => 'Disability Confident committed badge',
+				'alt'   => 'Disability Confident Employer badge',
 				'theme' => 'is-paper',
 			),
 			array(
@@ -89,56 +89,26 @@ if ( ! function_exists( 'amh_social_quicklinks_defaults' ) ) {
 			'icon_url'           => home_url( '/wp-content/uploads/2025/11/IMG_1089.png' ),
 			'footer_logo_url'    => home_url( '/wp-content/uploads/2025/11/8ea3eae8-6680-4be4-9082-752dd23a2a68-Photoroom-e1764035925813.png' ),
 			'home_url'           => home_url( '/' ),
-			'home_label'         => 'Visit the homepage',
-			'home_meta'          => 'Start with the latest Inkfire pages and services',
 			'blog_category_slug' => 'news',
 			'blog_url'           => amh_social_quicklinks_default_blog_url( 'news' ),
-			'blog_label'         => 'What’s new at Inkfire',
-			'blog_meta'          => 'Fresh updates, news, and recent thinking',
 			'review_url'         => 'https://www.google.com/search?q=inkfire+review&num=10&sca_esv=a34d0b4f4b0c4824&biw=1720&bih=966&sxsrf=ANbL-n4gyMjmUBLyZ9WroS5apG18mMx-FQ%3A1774371921137&ei=UcTCaaSBCIfqhbIP3_LU8Qk&ved=0ahUKEwjk7bvAgrmTAxUHdUEAHV85NZ4Q4dUDCBE&uact=5&oq=inkfire+review&gs_lp=Egxnd3Mtd2l6LXNlcnAiDmlua2ZpcmUgcmV2aWV3MgUQABjvBTIIEAAYgAQYogQyCBAAGIAEGKIEMggQABiABBiiBEj3BlDCBVjCBXACeACQAQCYAVugAVuqAQExuAEDyAEA-AEBmAIDoAJmwgIIEAAYsAMY7wXCAgsQABiABBiwAxiiBMICCxAAGLADGKIEGIkFmAMAiAYBkAYFkgcBM6AHrAKyBwExuAdhwgcFMC4yLjHIBweACAA&sclient=gws-wiz-serp&lqi=Cg5pbmtmaXJlIHJldmlldyICOAFIx_OEy523gIAIWg0QABgAIgdpbmtmaXJlkgENZGVzaWduX2FnZW5jeQ#rlimm=13572927679599070356',
-			'review_label'       => 'Read our Google reviews',
-			'review_meta'        => 'See why clients keep giving us five stars',
 			'facebook_url'       => 'https://facebook.com/inkfirelimited',
-			'facebook_label'     => 'Facebook',
 			'instagram_url'      => 'https://www.instagram.com/inkfirelimited/',
-			'instagram_label'    => 'Instagram',
 			'linkedin_url'       => 'https://uk.linkedin.com/company/inkfire',
-			'linkedin_label'     => 'LinkedIn',
 			'x_url'              => 'https://twitter.com/Inkfirelimited',
-			'x_label'            => 'X',
 			'tiktok_url'         => 'https://www.tiktok.com/@inkfirelimited',
-			'tiktok_label'       => 'TikTok',
 			'youtube_url'        => 'https://www.youtube.com/@mali.and.m.e',
-			'youtube_label'      => 'YouTube',
 			'youtube_id'         => 'A_WiCvOV72g',
-			'video_eyebrow'      => 'Portfolio reel',
 			'newsletter_form_id' => 'lo07zevpeekjkb1p38j',
-			'newsletter_default_state' => 'closed',
-			'newsletter_eyebrow' => 'Newsletter',
 			'newsletter_title'   => 'Join the Inkfire newsletter',
 			'newsletter_copy'    => 'Get our latest updates, opportunities, and behind-the-scenes thoughts without having to go looking for them.',
 			'newsletter_note'    => 'We keep it human, occasional, and worth opening.',
-			'feed_eyebrow'       => 'What’s new at Inkfire',
-			'feed_title'         => 'Latest updates',
-			'feed_archive_label' => 'Open category',
-			'trust_eyebrow'      => 'Awards & recognition',
-			'trust_title'        => 'Recognition we’re proud of',
-			'contact_eyebrow'    => 'Contact & company details',
-			'contact_title'      => 'Need a quick route to us?',
-			'contact_phone_label' => 'Call',
 			'contact_phone'      => '+44 (0)333 613 4653',
-			'contact_email_label' => 'Email',
 			'contact_email'      => 'hello@inkfire.co.uk',
-			'contact_address_label' => 'Address',
 			'contact_address'    => '9 Kingswell Road, Ensbury Park, Bournemouth, BH10 5DF',
-			'contact_hours_label' => 'Office hours',
 			'contact_hours'      => 'Mon – Fri, 9am – 5pm (UK time)',
-			'company_number_label' => 'Company No:',
 			'company_number'     => '15153305',
-			'vat_number_label'   => 'VAT:',
 			'vat_number'         => 'GB483189752',
-			'layout_sections'    => array( 'brand', 'social', 'primary_links', 'video', 'newsletter', 'feed', 'trust', 'contact' ),
-			'extra_links'        => array(),
 		);
 	}
 }
@@ -497,30 +467,28 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 		$uid      = sanitize_html_class( wp_unique_id( 'inkfire-linktree-' ) );
 		$nonce    = wp_create_nonce( 'amh_quicklinks_track' );
 		$ajax_url = admin_url( 'admin-ajax.php' );
-		$phone_href = preg_replace( '/[^0-9+]/', '', (string) $atts['contact_phone'] );
-		$email_href = sanitize_email( (string) $atts['contact_email'] );
 
 		$primary_links = array(
 			array(
 				'icon'  => 'home',
-				'label' => (string) $atts['home_label'],
-				'meta'  => (string) $atts['home_meta'],
+				'label' => 'Visit the homepage',
+				'meta'  => 'Start with the latest Inkfire pages and services',
 				'url'   => esc_url( $atts['home_url'] ),
 				'key'   => 'homepage',
 				'tone'  => 'is-green',
 			),
 			array(
 				'icon'  => 'blog',
-				'label' => (string) $atts['blog_label'],
-				'meta'  => (string) $atts['blog_meta'],
+				'label' => 'What’s new at Inkfire',
+				'meta'  => 'Fresh updates, news, and recent thinking',
 				'url'   => esc_url( $atts['blog_url'] ),
 				'key'   => 'blog',
 				'tone'  => 'is-orange',
 			),
 			array(
 				'icon'  => 'star',
-				'label' => (string) $atts['review_label'],
-				'meta'  => (string) $atts['review_meta'],
+				'label' => 'Read our Google reviews',
+				'meta'  => 'See why clients keep giving us five stars',
 				'url'   => esc_url( $atts['review_url'] ),
 				'key'   => 'reviews',
 				'tone'  => 'is-peach',
@@ -530,96 +498,24 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 		$social_links = array();
 		foreach (
 			array(
-				'instagram' => array(
-					'url'   => $atts['instagram_url'],
-					'label' => $atts['instagram_label'],
-				),
-				'linkedin'  => array(
-					'url'   => $atts['linkedin_url'],
-					'label' => $atts['linkedin_label'],
-				),
-				'facebook'  => array(
-					'url'   => $atts['facebook_url'],
-					'label' => $atts['facebook_label'],
-				),
-				'x'         => array(
-					'url'   => $atts['x_url'],
-					'label' => $atts['x_label'],
-				),
-				'tiktok'    => array(
-					'url'   => $atts['tiktok_url'],
-					'label' => $atts['tiktok_label'],
-				),
-				'youtube'   => array(
-					'url'   => $atts['youtube_url'],
-					'label' => $atts['youtube_label'],
-				),
-			) as $key => $social
+				'instagram' => $atts['instagram_url'],
+				'linkedin'  => $atts['linkedin_url'],
+				'facebook'  => $atts['facebook_url'],
+				'x'         => $atts['x_url'],
+				'tiktok'    => $atts['tiktok_url'],
+				'youtube'   => $atts['youtube_url'],
+			) as $label => $url
 		) {
-			$url = isset( $social['url'] ) ? $social['url'] : '';
 			if ( empty( $url ) ) {
 				continue;
 			}
 
 			$social_links[] = array(
-				'icon'  => $key,
-				'label' => ! empty( $social['label'] ) ? (string) $social['label'] : ucfirst( $key ),
+				'icon'  => $label,
+				'label' => 'linkedin' === $label ? 'LinkedIn' : ( 'x' === $label ? 'X' : ucfirst( $label ) ),
 				'url'   => esc_url( $url ),
-				'key'   => $key,
+				'key'   => $label,
 			);
-		}
-
-		$allowed_link_icons = array( 'home', 'blog', 'star', 'mail', 'facebook', 'instagram', 'linkedin', 'tiktok', 'x', 'youtube' );
-		$allowed_link_tones = array( 'is-green', 'is-orange', 'is-peach', 'is-neutral' );
-		$extra_links        = array();
-		if ( ! empty( $atts['extra_links'] ) && is_array( $atts['extra_links'] ) ) {
-			foreach ( $atts['extra_links'] as $index => $extra_link ) {
-				if ( ! is_array( $extra_link ) ) {
-					continue;
-				}
-
-				$label = isset( $extra_link['label'] ) ? trim( (string) $extra_link['label'] ) : '';
-				$url   = isset( $extra_link['url'] ) ? esc_url( (string) $extra_link['url'] ) : '';
-
-				if ( '' === $label || '' === $url ) {
-					continue;
-				}
-
-				$icon = isset( $extra_link['icon'] ) ? sanitize_key( (string) $extra_link['icon'] ) : 'mail';
-				$tone = isset( $extra_link['tone'] ) ? sanitize_key( (string) $extra_link['tone'] ) : 'is-neutral';
-
-				$extra_links[] = array(
-					'icon'  => in_array( $icon, $allowed_link_icons, true ) ? $icon : 'mail',
-					'label' => $label,
-					'meta'  => isset( $extra_link['meta'] ) ? trim( (string) $extra_link['meta'] ) : '',
-					'url'   => $url,
-					'key'   => 'custom_' . $index,
-					'tone'  => in_array( $tone, $allowed_link_tones, true ) ? $tone : 'is-neutral',
-				);
-			}
-		}
-
-		$primary_links = array_merge( $primary_links, $extra_links );
-
-		$allowed_sections = array( 'brand', 'social', 'primary_links', 'newsletter', 'video', 'feed', 'trust', 'contact' );
-		$section_order    = array();
-		if ( ! empty( $atts['layout_sections'] ) && is_array( $atts['layout_sections'] ) ) {
-			foreach ( $atts['layout_sections'] as $layout_item ) {
-				$section_key = '';
-				if ( is_array( $layout_item ) && ! empty( $layout_item['section_type'] ) ) {
-					$section_key = sanitize_key( (string) $layout_item['section_type'] );
-				} elseif ( is_string( $layout_item ) ) {
-					$section_key = sanitize_key( $layout_item );
-				}
-
-				if ( $section_key && in_array( $section_key, $allowed_sections, true ) && ! in_array( $section_key, $section_order, true ) ) {
-					$section_order[] = $section_key;
-				}
-			}
-		}
-
-		if ( empty( $section_order ) ) {
-			$section_order = $allowed_sections;
 		}
 
 		$latest_posts = get_posts(
@@ -639,220 +535,6 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 			$newsletter_markup = trim( do_shortcode( '[sender-form id="' . sanitize_text_field( (string) $atts['newsletter_form_id'] ) . '"]' ) );
 		}
 
-		$section_markup = array();
-
-		ob_start();
-		?>
-		<div class="amh-ql-head">
-			<div class="amh-ql-brand" aria-hidden="true">
-				<img src="<?php echo esc_url( $atts['logo_url'] ); ?>" alt="Inkfire logo" class="amh-ql-logo">
-			</div>
-			<p class="amh-ql-tagline"><?php echo esc_html( strtoupper( (string) $atts['tagline'] ) ); ?></p>
-
-			<div class="amh-ql-copy">
-				<h1><?php echo esc_html( $atts['title'] ); ?></h1>
-				<p class="amh-ql-bio"><?php echo esc_html( $atts['bio'] ); ?></p>
-			</div>
-		</div>
-		<?php
-		$section_markup['brand'] = ob_get_clean();
-
-		ob_start();
-		?>
-		<div class="amh-ql-social-panel" aria-label="Inkfire social links">
-			<div class="amh-ql-social-row">
-				<?php foreach ( $social_links as $social ) : ?>
-					<a
-						href="<?php echo esc_url( $social['url'] ); ?>"
-						class="amh-ql-social-pill"
-						aria-label="<?php echo esc_attr( $social['label'] ); ?>"
-						title="<?php echo esc_attr( $social['label'] ); ?>"
-						target="_blank"
-						rel="noopener noreferrer"
-						data-amh-track="social_<?php echo esc_attr( $social['key'] ); ?>"
-						data-amh-event="social_click"
-					>
-						<span class="amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( $social['icon'] ); ?></span>
-					</a>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php
-		$section_markup['social'] = ob_get_clean();
-
-		ob_start();
-		?>
-		<div class="amh-ql-link-stack">
-			<?php foreach ( $primary_links as $link ) : ?>
-				<a
-					class="amh-ql-link <?php echo esc_attr( $link['tone'] ); ?>"
-					href="<?php echo esc_url( $link['url'] ); ?>"
-					data-amh-track="primary_<?php echo esc_attr( $link['key'] ); ?>"
-					data-amh-event="link_click"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<span class="amh-ql-link-icon amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( $link['icon'] ); ?></span>
-					<span class="amh-ql-link-copy">
-						<strong><?php echo esc_html( $link['label'] ); ?></strong>
-						<?php if ( '' !== $link['meta'] ) : ?>
-							<span><?php echo esc_html( $link['meta'] ); ?></span>
-						<?php endif; ?>
-					</span>
-					<span class="amh-ql-link-arrow amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( 'arrow' ); ?></span>
-				</a>
-			<?php endforeach; ?>
-		</div>
-		<?php
-		$section_markup['primary_links'] = ob_get_clean();
-
-		ob_start();
-		?>
-		<div class="amh-ql-video amh-ql-glass-soft">
-			<div class="amh-ql-section-head">
-				<div>
-					<p class="amh-ql-eyebrow"><?php echo esc_html( $atts['video_eyebrow'] ); ?></p>
-				</div>
-			</div>
-			<div class="amh-ql-video-frame">
-				<iframe
-					src="https://www.youtube-nocookie.com/embed/<?php echo esc_attr( $atts['youtube_id'] ); ?>?rel=0&modestbranding=1"
-					title="Inkfire video"
-					loading="lazy"
-					referrerpolicy="strict-origin-when-cross-origin"
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-					allowfullscreen
-					data-amh-track="youtube_video"
-					data-amh-event="video_play"
-				></iframe>
-			</div>
-		</div>
-		<?php
-		$section_markup['video'] = ob_get_clean();
-
-		if ( ! empty( $newsletter_markup ) ) {
-			$newsletter_is_open = 'open' === strtolower( trim( (string) $atts['newsletter_default_state'] ) );
-			ob_start();
-			?>
-			<details class="amh-ql-newsletter amh-ql-glass-soft"<?php echo $newsletter_is_open ? ' open' : ''; ?>>
-				<summary class="amh-ql-newsletter-summary">
-					<div class="amh-ql-section-head">
-						<div>
-							<p class="amh-ql-eyebrow"><?php echo esc_html( $atts['newsletter_eyebrow'] ); ?></p>
-							<h2><?php echo esc_html( $atts['newsletter_title'] ); ?></h2>
-						</div>
-						<span class="amh-ql-newsletter-chevron amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( 'chevron' ); ?></span>
-					</div>
-					<p class="amh-ql-newsletter-copy"><?php echo esc_html( $atts['newsletter_copy'] ); ?></p>
-				</summary>
-				<div class="amh-ql-newsletter-panel">
-					<div class="amh-ql-newsletter-form" data-amh-track="newsletter_form" data-amh-event="newsletter_submit">
-						<?php echo $newsletter_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					</div>
-					<p class="amh-ql-newsletter-note"><?php echo esc_html( $atts['newsletter_note'] ); ?></p>
-				</div>
-			</details>
-			<?php
-			$section_markup['newsletter'] = ob_get_clean();
-		}
-
-		if ( ! empty( $latest_posts ) ) {
-			ob_start();
-			?>
-			<div class="amh-ql-feed amh-ql-glass-soft">
-				<div class="amh-ql-section-head">
-					<div>
-						<p class="amh-ql-eyebrow"><?php echo esc_html( $atts['feed_eyebrow'] ); ?></p>
-						<h2><?php echo esc_html( $atts['feed_title'] ); ?></h2>
-					</div>
-					<a href="<?php echo esc_url( $atts['blog_url'] ); ?>" class="amh-ql-inline-link" data-amh-track="open_blog_archive" data-amh-event="link_click"><?php echo esc_html( $atts['feed_archive_label'] ); ?></a>
-				</div>
-
-				<div class="amh-ql-posts">
-					<?php foreach ( $latest_posts as $post_item ) : ?>
-						<a href="<?php echo esc_url( get_permalink( $post_item ) ); ?>" class="amh-ql-post-card" data-amh-track="latest_post_<?php echo esc_attr( (string) $post_item->ID ); ?>" data-amh-event="post_click">
-							<?php if ( has_post_thumbnail( $post_item ) ) : ?>
-								<img
-									src="<?php echo esc_url( get_the_post_thumbnail_url( $post_item, 'medium_large' ) ); ?>"
-									alt=""
-									class="amh-ql-post-thumb"
-									loading="lazy"
-								>
-							<?php endif; ?>
-							<div class="amh-ql-post-copy">
-								<strong><?php echo esc_html( get_the_title( $post_item ) ); ?></strong>
-								<span><?php echo esc_html( get_the_date( 'j M Y', $post_item ) ); ?></span>
-							</div>
-						</a>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php
-			$section_markup['feed'] = ob_get_clean();
-		}
-
-		if ( ! empty( $awards ) ) {
-			ob_start();
-			?>
-			<div class="amh-ql-trust amh-ql-glass-soft">
-				<div class="amh-ql-section-head">
-					<div>
-						<p class="amh-ql-eyebrow"><?php echo esc_html( $atts['trust_eyebrow'] ); ?></p>
-						<h2><?php echo esc_html( $atts['trust_title'] ); ?></h2>
-					</div>
-				</div>
-
-				<div class="amh-ql-trust-grid">
-					<?php foreach ( $awards as $logo ) : ?>
-						<div class="amh-ql-trust-item <?php echo esc_attr( $logo['theme'] ); ?>">
-							<img src="<?php echo esc_url( $logo['src'] ); ?>" alt="<?php echo esc_attr( $logo['alt'] ); ?>" loading="lazy">
-						</div>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php
-			$section_markup['trust'] = ob_get_clean();
-		}
-
-		ob_start();
-		?>
-		<div class="amh-ql-contact amh-ql-glass-soft">
-			<div class="amh-ql-section-head">
-				<div>
-					<p class="amh-ql-eyebrow"><?php echo esc_html( $atts['contact_eyebrow'] ); ?></p>
-					<h2><?php echo esc_html( $atts['contact_title'] ); ?></h2>
-				</div>
-			</div>
-
-			<div class="amh-ql-contact-grid">
-				<div class="amh-ql-contact-item">
-					<strong><?php echo esc_html( $atts['contact_phone_label'] ); ?></strong>
-					<a href="tel:<?php echo esc_attr( $phone_href ); ?>"><?php echo esc_html( $atts['contact_phone'] ); ?></a>
-				</div>
-				<div class="amh-ql-contact-item">
-					<strong><?php echo esc_html( $atts['contact_email_label'] ); ?></strong>
-					<a href="mailto:<?php echo esc_attr( antispambot( $email_href ) ); ?>"><?php echo esc_html( antispambot( $atts['contact_email'] ) ); ?></a>
-				</div>
-				<div class="amh-ql-contact-item">
-					<strong><?php echo esc_html( $atts['contact_hours_label'] ); ?></strong>
-					<span><?php echo esc_html( $atts['contact_hours'] ); ?></span>
-				</div>
-				<div class="amh-ql-contact-item">
-					<strong><?php echo esc_html( $atts['contact_address_label'] ); ?></strong>
-					<address><?php echo esc_html( $atts['contact_address'] ); ?></address>
-				</div>
-			</div>
-
-			<div class="amh-ql-company-strip">
-				<div class="amh-ql-company-meta">
-					<span><strong><?php echo esc_html( $atts['company_number_label'] ); ?></strong> <?php echo esc_html( $atts['company_number'] ); ?></span>
-					<span><strong><?php echo esc_html( $atts['vat_number_label'] ); ?></strong> <?php echo esc_html( $atts['vat_number'] ); ?></span>
-				</div>
-			</div>
-		</div>
-		<?php
-		$section_markup['contact'] = ob_get_clean();
-
 		ob_start();
 		?>
 		<section id="<?php echo esc_attr( $uid ); ?>" class="amh-ql-shell" aria-label="Inkfire quicklinks">
@@ -860,12 +542,186 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 
 			<div class="amh-ql-stage">
 				<div class="amh-ql-main amh-ql-glass">
-					<?php foreach ( $section_order as $section_key ) : ?>
-						<?php if ( empty( $section_markup[ $section_key ] ) ) : ?>
-							<?php continue; ?>
+					<div class="amh-ql-head">
+						<div class="amh-ql-brand" aria-hidden="true">
+							<?php if ( ! empty( $atts['icon_url'] ) ) : ?>
+								<img src="<?php echo esc_url( $atts['icon_url'] ); ?>" alt="" class="amh-ql-brand-icon">
+							<?php endif; ?>
+							<img src="<?php echo esc_url( $atts['logo_url'] ); ?>" alt="Inkfire logo" class="amh-ql-logo">
+						</div>
+						<p class="amh-ql-tagline"><?php echo esc_html( strtoupper( (string) $atts['tagline'] ) ); ?></p>
+
+						<div class="amh-ql-copy">
+							<h1><?php echo esc_html( $atts['title'] ); ?></h1>
+							<p class="amh-ql-bio"><?php echo esc_html( $atts['bio'] ); ?></p>
+						</div>
+					</div>
+
+					<div class="amh-ql-social-panel" aria-label="Inkfire social links">
+						<div class="amh-ql-social-row">
+							<?php foreach ( $social_links as $social ) : ?>
+								<a
+									href="<?php echo esc_url( $social['url'] ); ?>"
+									class="amh-ql-social-pill"
+									target="_blank"
+									rel="noopener noreferrer"
+									data-amh-track="social_<?php echo esc_attr( $social['key'] ); ?>"
+									data-amh-event="social_click"
+								>
+									<span class="amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( $social['icon'] ); ?></span>
+									<span><?php echo esc_html( $social['label'] ); ?></span>
+								</a>
+							<?php endforeach; ?>
+						</div>
+					</div>
+
+					<div class="amh-ql-link-stack">
+						<?php foreach ( $primary_links as $link ) : ?>
+							<a
+								class="amh-ql-link <?php echo esc_attr( $link['tone'] ); ?>"
+								href="<?php echo esc_url( $link['url'] ); ?>"
+								data-amh-track="primary_<?php echo esc_attr( $link['key'] ); ?>"
+								data-amh-event="link_click"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								<span class="amh-ql-link-icon amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( $link['icon'] ); ?></span>
+								<span class="amh-ql-link-copy">
+									<strong><?php echo esc_html( $link['label'] ); ?></strong>
+									<span><?php echo esc_html( $link['meta'] ); ?></span>
+								</span>
+								<span class="amh-ql-link-arrow amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( 'arrow' ); ?></span>
+							</a>
+						<?php endforeach; ?>
+					</div>
+
+					<div class="amh-ql-middle">
+						<div class="amh-ql-video amh-ql-glass-soft">
+							<div class="amh-ql-section-head">
+								<div>
+									<p class="amh-ql-eyebrow">Portfolio reel</p>
+								</div>
+							</div>
+							<div class="amh-ql-video-frame">
+								<iframe
+									src="https://www.youtube-nocookie.com/embed/<?php echo esc_attr( $atts['youtube_id'] ); ?>?rel=0&modestbranding=1"
+									title="Inkfire video"
+									loading="lazy"
+									referrerpolicy="strict-origin-when-cross-origin"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+									allowfullscreen
+									data-amh-track="youtube_video"
+									data-amh-event="video_play"
+								></iframe>
+							</div>
+						</div>
+
+						<?php if ( ! empty( $newsletter_markup ) ) : ?>
+							<details class="amh-ql-newsletter amh-ql-glass-soft" open>
+								<summary class="amh-ql-newsletter-summary">
+									<div class="amh-ql-section-head">
+										<div>
+											<p class="amh-ql-eyebrow">Newsletter</p>
+											<h2><?php echo esc_html( $atts['newsletter_title'] ); ?></h2>
+										</div>
+										<span class="amh-ql-newsletter-chevron amh-ql-icon" aria-hidden="true"><?php echo amh_social_quicklinks_svg( 'chevron' ); ?></span>
+									</div>
+									<p class="amh-ql-newsletter-copy"><?php echo esc_html( $atts['newsletter_copy'] ); ?></p>
+								</summary>
+								<div class="amh-ql-newsletter-panel">
+									<div class="amh-ql-newsletter-form" data-amh-track="newsletter_form" data-amh-event="newsletter_submit">
+										<?php echo $newsletter_markup; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									</div>
+									<p class="amh-ql-newsletter-note"><?php echo esc_html( $atts['newsletter_note'] ); ?></p>
+								</div>
+							</details>
 						<?php endif; ?>
-						<?php echo $section_markup[ $section_key ]; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					<?php endforeach; ?>
+					</div>
+
+					<?php if ( ! empty( $latest_posts ) ) : ?>
+						<div class="amh-ql-feed amh-ql-glass-soft">
+							<div class="amh-ql-section-head">
+								<div>
+									<p class="amh-ql-eyebrow">What’s new at Inkfire</p>
+									<h2>Latest updates</h2>
+								</div>
+								<a href="<?php echo esc_url( $atts['blog_url'] ); ?>" class="amh-ql-inline-link" data-amh-track="open_blog_archive" data-amh-event="link_click">Open category</a>
+							</div>
+
+							<div class="amh-ql-posts">
+								<?php foreach ( $latest_posts as $post_item ) : ?>
+									<a href="<?php echo esc_url( get_permalink( $post_item ) ); ?>" class="amh-ql-post-card" data-amh-track="latest_post_<?php echo esc_attr( (string) $post_item->ID ); ?>" data-amh-event="post_click">
+										<?php if ( has_post_thumbnail( $post_item ) ) : ?>
+											<img
+												src="<?php echo esc_url( get_the_post_thumbnail_url( $post_item, 'medium_large' ) ); ?>"
+												alt=""
+												class="amh-ql-post-thumb"
+												loading="lazy"
+											>
+										<?php endif; ?>
+										<div class="amh-ql-post-copy">
+											<strong><?php echo esc_html( get_the_title( $post_item ) ); ?></strong>
+											<span><?php echo esc_html( get_the_date( 'j M Y', $post_item ) ); ?></span>
+										</div>
+									</a>
+								<?php endforeach; ?>
+							</div>
+						</div>
+					<?php endif; ?>
+
+					<?php if ( ! empty( $awards ) ) : ?>
+						<div class="amh-ql-trust amh-ql-glass-soft">
+							<div class="amh-ql-section-head">
+								<div>
+									<p class="amh-ql-eyebrow">Awards & recognition</p>
+									<h2>Recognition we’re proud of</h2>
+								</div>
+							</div>
+
+							<div class="amh-ql-trust-grid">
+								<?php foreach ( $awards as $logo ) : ?>
+									<div class="amh-ql-trust-item <?php echo esc_attr( $logo['theme'] ); ?>">
+										<img src="<?php echo esc_url( $logo['src'] ); ?>" alt="<?php echo esc_attr( $logo['alt'] ); ?>" loading="lazy">
+									</div>
+								<?php endforeach; ?>
+							</div>
+						</div>
+					<?php endif; ?>
+
+					<div class="amh-ql-contact amh-ql-glass-soft">
+						<div class="amh-ql-section-head">
+							<div>
+								<p class="amh-ql-eyebrow">Contact & company details</p>
+								<h2>Need a quick route to us?</h2>
+							</div>
+						</div>
+
+						<div class="amh-ql-contact-grid">
+							<div class="amh-ql-contact-item">
+								<strong>Call</strong>
+								<a href="tel:+443336134653"><?php echo esc_html( $atts['contact_phone'] ); ?></a>
+							</div>
+							<div class="amh-ql-contact-item">
+								<strong>Email</strong>
+								<a href="mailto:<?php echo esc_attr( antispambot( $atts['contact_email'] ) ); ?>"><?php echo esc_html( antispambot( $atts['contact_email'] ) ); ?></a>
+							</div>
+							<div class="amh-ql-contact-item">
+								<strong>Office hours</strong>
+								<span><?php echo esc_html( $atts['contact_hours'] ); ?></span>
+							</div>
+							<div class="amh-ql-contact-item">
+								<strong>Address</strong>
+								<address><?php echo esc_html( $atts['contact_address'] ); ?></address>
+							</div>
+						</div>
+
+						<div class="amh-ql-company-strip">
+							<div class="amh-ql-company-meta">
+								<span><strong>Company No:</strong> <?php echo esc_html( $atts['company_number'] ); ?></span>
+								<span><strong>VAT:</strong> <?php echo esc_html( $atts['vat_number'] ); ?></span>
+							</div>
+						</div>
+					</div>
 
 					<span class="amh-ql-sr" data-amh-live aria-live="polite"></span>
 				</div>
@@ -873,12 +729,10 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 
 			<style>
 				#<?php echo esc_attr( $uid ); ?> {
-					--amh-ql-bg-a: #1a1c29;
-					--amh-ql-bg-b: #1a1c29;
-					--amh-ql-bg-c: #171824;
-					--amh-ql-bg-d: #151622;
-					--amh-ql-canvas-border: rgba(255, 255, 255, 0.06);
-					--amh-ql-canvas-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+					--amh-ql-bg-a: #15454b;
+					--amh-ql-bg-b: #1e6167;
+					--amh-ql-bg-c: #0e8c78;
+					--amh-ql-bg-d: #01ae93;
 					--amh-ql-shell: rgba(18, 23, 40, 0.82);
 					--amh-ql-shell-soft: rgba(24, 30, 50, 0.72);
 					--amh-ql-border: rgba(255, 255, 255, 0.12);
@@ -895,25 +749,20 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 					position: relative;
 					overflow: hidden;
 					padding: 22px 16px;
-					background:
-						radial-gradient(circle at 10% 40%, rgba(223, 21, 124, 0.06), transparent 55%),
-						radial-gradient(circle at 90% 15%, rgba(23, 154, 214, 0.08), transparent 55%),
-						linear-gradient(180deg, var(--amh-ql-bg-a) 0%, var(--amh-ql-bg-d) 100%);
+					background-color: var(--amh-ql-bg-b);
+					background-image: linear-gradient(
+						115deg,
+						var(--amh-ql-bg-a) 0%,
+						var(--amh-ql-bg-b) 35%,
+						var(--amh-ql-bg-c) 70%,
+						var(--amh-ql-bg-d) 100%
+					);
 					color: var(--amh-ql-text);
 					font-family: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
 					isolation: isolate;
-					border: 1px solid var(--amh-ql-canvas-border);
-					box-shadow: var(--amh-ql-canvas-shadow);
-				}
-				#<?php echo esc_attr( $uid ); ?>::before {
-					content: "";
-					position: absolute;
-					inset: 0;
-					pointer-events: none;
-					border-radius: inherit;
-					backdrop-filter: blur(6px);
-					-webkit-backdrop-filter: blur(6px);
-					z-index: 0;
+					border-top: 1px solid rgba(255, 255, 255, 0.2);
+					border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+					box-shadow: 0 10px 30px rgba(1, 174, 147, 0.15);
 				}
 				#<?php echo esc_attr( $uid ); ?> * {
 					box-sizing: border-box;
@@ -922,14 +771,16 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 					position: absolute;
 					inset: 0;
 					pointer-events: none;
-					background:
-						radial-gradient(circle at 12% 28%, rgba(223, 21, 124, 0.14), transparent 42%),
-						radial-gradient(circle at 88% 14%, rgba(23, 154, 214, 0.12), transparent 42%),
-						linear-gradient(135deg, transparent 28%, rgba(255, 255, 255, 0.05) 50%, transparent 72%);
+					background: linear-gradient(
+						120deg,
+						transparent 30%,
+						rgba(1, 174, 147, 0.25) 50%,
+						transparent 70%
+					);
 					mix-blend-mode: overlay;
 					opacity: 0;
 					transition: opacity 0.5s ease;
-					z-index: 0;
+					z-index: -1;
 				}
 				#<?php echo esc_attr( $uid ); ?>:hover .amh-ql-backdrop {
 					opacity: 1;
@@ -937,8 +788,6 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-stage {
 					max-width: 480px;
 					margin: 0 auto;
-					position: relative;
-					z-index: 1;
 				}
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-glass,
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-glass-soft {
@@ -994,13 +843,20 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 				}
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-brand {
 					display: inline-grid;
-					gap: 0;
+					gap: 12px;
 					justify-items: center;
 					align-items: center;
 				}
+				#<?php echo esc_attr( $uid ); ?> .amh-ql-brand-icon {
+					width: 82px;
+					height: 82px;
+					object-fit: cover;
+					border-radius: 26px;
+					box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+				}
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-logo {
-					width: min(100%, 280px);
-					max-width: 280px;
+					width: 100%;
+					max-width: 100%;
 					height: auto;
 					object-fit: contain;
 				}
@@ -1042,36 +898,22 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-social-row {
 					display: flex;
 					flex-wrap: wrap;
-					gap: 12px;
+					gap: 10px;
 					justify-content: center;
 				}
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-social-pill {
 					display: inline-flex;
 					align-items: center;
-					justify-content: center;
-					flex: 0 0 48px;
-					width: 48px;
-					height: 48px;
-					padding: 0;
+					gap: 10px;
+					min-height: 46px;
+					padding: 0 16px;
 					border-radius: 999px;
 					background: rgba(255, 255, 255, 0.06);
 					border: 1px solid rgba(255, 255, 255, 0.12);
 					color: #ffffff;
 					text-decoration: none;
+					font-weight: 600;
 					transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
-				}
-				#<?php echo esc_attr( $uid ); ?> .amh-ql-social-pill .amh-ql-icon {
-					display: inline-flex;
-					align-items: center;
-					justify-content: center;
-					width: 18px;
-					height: 18px;
-					line-height: 1;
-				}
-				#<?php echo esc_attr( $uid ); ?> .amh-ql-social-pill .amh-ql-icon svg {
-					display: block;
-					width: 18px;
-					height: 18px;
 				}
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-social-pill:hover {
 					transform: translateY(-1px);
@@ -1134,10 +976,6 @@ if ( ! function_exists( 'amh_social_quicklinks_shortcode' ) ) {
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-link.is-peach {
 					background: linear-gradient(135deg, rgba(251, 204, 191, 0.98), rgba(242, 135, 74, 0.88));
 					color: #151622;
-				}
-				#<?php echo esc_attr( $uid ); ?> .amh-ql-link.is-neutral {
-					background: rgba(255, 255, 255, 0.08);
-					border-color: rgba(255, 255, 255, 0.14);
 				}
 				#<?php echo esc_attr( $uid ); ?> .amh-ql-link.is-peach .amh-ql-link-copy span {
 					color: rgba(21, 22, 34, 0.78);

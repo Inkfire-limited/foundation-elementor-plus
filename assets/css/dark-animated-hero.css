@@ -963,7 +963,30 @@
 }
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-hero__inner {
-    max-width: none !important;
+    max-width: min(100%, 1380px) !important;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.56fr) minmax(320px, 410px);
+    gap: clamp(40px, 7vw, 125px);
+    align-items: center;
+    width: 100%;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    max-width: 860px;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-side {
+    min-width: 0;
+    width: 100%;
+    max-width: 410px;
+    justify-self: end;
 }
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-eyebrow {
@@ -998,6 +1021,31 @@
     padding-right: 5px;
     vertical-align: middle;
     margin-bottom: 0;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-intro-label {
+    margin: 26px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: rgba(255,255,255,0.34);
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-display-title {
+    margin: 10px 0 0;
+    max-width: 12ch;
+    font-size: clamp(2rem, 4vw, 3.7rem);
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+    font-weight: 900;
+    text-wrap: balance;
+    background: linear-gradient(135deg, #07A079 0%, #32B190 24%, #E27200 70%, #CE3D27 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #32B190;
 }
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-breadcrumb-link,
@@ -1057,8 +1105,12 @@
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-headline {
     max-width: none;
-    margin-bottom: 0;
-    line-height: 0.94;
+    margin: 12px 0 0;
+    max-width: 12.4ch;
+    font-size: clamp(3rem, 6.4vw, 5.75rem);
+    line-height: 0.92;
+    letter-spacing: -0.06em;
+    text-wrap: balance;
 }
 
 .foundation-inkfire-splash--preset-portfolio-archive .foundation-inkfire-meta-row,
@@ -1095,14 +1147,18 @@
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-subhead {
     width: 100%;
-    max-width: 980px !important;
+    max-width: 42rem !important;
     color: rgba(250, 202, 187, 0.92);
-    margin: 5px 0;
+    margin: 22px 0 0;
+    font-size: clamp(1.03rem, 1.45vw, 1.26rem);
+    line-height: 1.9;
+    white-space: pre-line;
 }
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-action-row {
-    margin-top: 14px;
+    margin-top: 28px;
     gap: 18px 26px;
+    width: 100%;
 }
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-avatar-group--project {
@@ -1113,6 +1169,132 @@
     line-height: 0;
 }
 
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.11);
+    background:
+        linear-gradient(180deg, rgba(50,177,144,0.10) 0%, rgba(32,35,50,0.88) 22%, rgba(25,26,40,0.96) 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 20px 60px rgba(0,0,0,0.24);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__head {
+    padding: 22px 24px 18px;
+    background: linear-gradient(180deg, rgba(50,177,144,0.14) 0%, rgba(50,177,144,0.08) 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__eyebrow {
+    margin: 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: rgba(255,255,255,0.5);
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__body {
+    padding: 0 24px;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__row {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 17px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__row:last-child {
+    border-bottom: 0;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__label {
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: rgba(255,255,255,0.36);
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__value {
+    color: #ffffff;
+    font-size: 0.97rem;
+    font-weight: 700;
+    line-height: 1.55;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__value--link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #32B190;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__value--link svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex: 0 0 auto;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__value--link:hover,
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__value--link:focus-visible {
+    color: #FBCCBF;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    width: 100%;
+    margin-top: clamp(22px, 2.5vw, 34px);
+    border-radius: 30px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.08);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 18px 54px rgba(0,0,0,0.18);
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-stat {
+    min-height: 160px;
+    padding: 28px 24px;
+    background: linear-gradient(180deg, rgba(15,17,28,0.9) 0%, rgba(23,25,38,0.96) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-stat__value {
+    font-size: clamp(1.9rem, 4vw, 3.15rem);
+    line-height: 0.94;
+    letter-spacing: -0.05em;
+    font-weight: 900;
+    color: #FBCCBF;
+    text-wrap: balance;
+}
+
+.foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-stat__label {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.44);
+    font-weight: 700;
+}
+
 @media (max-width: 900px) {
     .foundation-inkfire-avatar-group {
         justify-content: center;
@@ -1120,6 +1302,16 @@
 
     .foundation-inkfire-team-strip-link {
         justify-content: center;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-shell {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-side {
+        width: 100%;
     }
 }
 
@@ -1134,6 +1326,123 @@
 
 .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-secondary-btn {
     text-decoration-thickness: 2px;
+}
+
+@media (max-width: 1024px) {
+    .foundation-inkfire-splash--preset-portfolio-post {
+        --foundation-inkfire-hero-padding-top: 132px;
+        --foundation-inkfire-hero-padding-bottom: 124px;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-shell {
+        gap: clamp(34px, 5vw, 72px);
+        grid-template-columns: minmax(0, 1.42fr) minmax(300px, 380px);
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-headline {
+        max-width: 11.5ch;
+        font-size: clamp(2.7rem, 7vw, 4.7rem);
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-display-title {
+        font-size: clamp(1.7rem, 4vw, 3rem);
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-meta-row {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-subhead {
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 900px) {
+    /* Re-assert the single-column mobile layout after the broader tablet rules above. */
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-shell {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-main,
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-side {
+        max-width: none;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-hero-side {
+        width: 100%;
+        justify-self: stretch;
+    }
+}
+
+@media (max-width: 767px) {
+    .foundation-inkfire-splash--preset-portfolio-post {
+        --foundation-inkfire-hero-padding-top: 120px;
+        --foundation-inkfire-hero-padding-right: 18px;
+        --foundation-inkfire-hero-padding-bottom: 110px;
+        --foundation-inkfire-hero-padding-left: 18px;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-headline {
+        max-width: 100%;
+        font-size: clamp(2.3rem, 11vw, 3.8rem);
+        line-height: 0.96;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-intro-label {
+        margin-top: 22px;
+        font-size: 0.8rem;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-display-title {
+        max-width: 100%;
+        font-size: clamp(1.6rem, 9vw, 2.4rem);
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-kicker {
+        font-size: clamp(1.3rem, 7vw, 1.8rem);
+        white-space: normal;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-eyebrow {
+        flex-wrap: wrap;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-action-row,
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-button-row {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-main-btn,
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-secondary-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card {
+        border-radius: 26px;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__head {
+        padding: 20px 22px 18px;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-details-card__body {
+        padding: 0 22px;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-stats {
+        grid-template-columns: 1fr;
+        border-radius: 24px;
+    }
+
+    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-portfolio-stat {
+        min-height: 132px;
+        padding: 24px 20px;
+    }
 }
 
 .foundation-inkfire-splash--preset-blog-archive,
@@ -1423,15 +1732,6 @@
 .foundation-inkfire-splash--align-left .foundation-inkfire-kicker {
     align-self: flex-start;
     text-align: left;
-    max-width: var(--foundation-inkfire-left-subtitle-width, 100%);
-}
-
-.foundation-inkfire-splash--align-left .foundation-inkfire-headline {
-    max-width: var(--foundation-inkfire-left-title-width, 100%);
-}
-
-.foundation-inkfire-splash--align-left .foundation-inkfire-subhead {
-    max-width: var(--foundation-inkfire-left-paragraph-width, 100%);
 }
 
 .foundation-inkfire-splash--align-left .foundation-inkfire-meta-row {
