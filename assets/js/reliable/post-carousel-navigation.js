@@ -4,7 +4,7 @@
   window.FoundationPostNavigationLoaded = true;
   let sequence = 0;
   const ROOT = '.foundation-post-carousel';
-  const EVENTS = 'init update slideChange reachBeginning reachEnd fromEdge lock unlock enable disable breakpoint observerUpdate resize destroy';
+  const EVENTS = 'init update slideChange reachBeginning reachEnd fromEdge lock unlock enable disable breakpoint observerUpdate resize transitionEnd destroy';
   function register() {
     window.FoundationWidgets.register('post-carousel-navigation', ROOT, function (root, life) {
       const own = (selector) => Array.from(root.querySelectorAll(selector)).filter((node) => node.closest(ROOT) === root);
@@ -20,6 +20,9 @@
       let frame = 0;
       let managedId = null;
       let managedTarget = null;
+      let pausedByPolicy = false;
+      let userStopped = false;
+      const savedSlides = new Map();
       const savedControls = controls.map((node) => ({ node, attrs: ['role','tabindex','aria-label','aria-controls','aria-disabled'].map((key) => [key,node.getAttribute(key)]) }));
       own('[data-foundation-post-status]').forEach((node) => node.remove());
       const status = document.createElement('span');
@@ -29,7 +32,7 @@
       status.setAttribute('aria-live', 'polite');
       status.setAttribute('aria-atomic', 'true');
       root.appendChild(status);
-      const motion = life.media('(prefers-reduced-motion: reduce)', () => {});
+      const motion = life.media('(prefers-reduced-motion: reduce)', schedule);
       const attr = (node, key, value) => { if (node.getAttribute(key) !== value) node.setAttribute(key,value); };
       controls.forEach((node, index) => {
         // Compatibility for editor-side HTML templates or a cached pre-button fragment.
@@ -52,13 +55,42 @@
         if (managedTarget && managedTarget.id === managedId) managedTarget.removeAttribute('id');
         managedTarget = null; managedId = null;
       }
+      function restoreSlides() {
+        savedSlides.forEach((attrs, slide) => {
+          attrs.forEach(([key,value]) => {
+            if (value === null) slide.removeAttribute(key); else slide.setAttribute(key,value);
+          });
+        });
+        savedSlides.clear();
+      }
+      function syncSlides(element) {
+        if (!element || !swiper) { restoreSlides(); return; }
+        const bounds = element.getBoundingClientRect();
+        Array.from(element.querySelectorAll('.swiper-slide')).filter(slide => slide.closest('.swiper') === element).forEach(slide => {
+          if (!savedSlides.has(slide)) savedSlides.set(slide, ['inert','aria-hidden'].map(key => [key,slide.getAttribute(key)]));
+          const rect = slide.getBoundingClientRect();
+          const visible = rect.width > 0 && Math.min(rect.right,bounds.right) - Math.max(rect.left,bounds.left) > 1;
+          slide.toggleAttribute('inert', !visible);
+          attr(slide,'aria-hidden',visible ? 'false' : 'true');
+        });
+      }
+      function syncAutoplay() {
+        const autoplay = swiper && swiper.autoplay;
+        if (!autoplay || typeof autoplay.stop !== 'function' || typeof autoplay.start !== 'function') return;
+        const rect = root.getBoundingClientRect();
+        const pause = motion.matches || document.hidden || root.contains(document.activeElement) || root.matches(':hover') || rect.bottom <= 0 || rect.top >= window.innerHeight;
+        if (pause && autoplay.running) { autoplay.stop(); pausedByPolicy = true; }
+        else if (!pause && pausedByPolicy && !userStopped) { pausedByPolicy = false; autoplay.start(); }
+      }
       function sync() {
         if (!life.active) return;
         const element = findSlider();
         const candidate = element && element.swiper;
         const live = candidate && candidate !== failedSwiper && !candidate.destroyed && candidate.initialized !== false && typeof candidate.slideNext === 'function' && typeof candidate.slidePrev === 'function' ? candidate : null;
         if (live !== swiper) {
+          restoreSlides();
           disconnectSwiper();
+          pausedByPolicy = false;
           swiper = live;
           if (swiper && typeof swiper.on === 'function') swiper.on(EVENTS, schedule);
         }
@@ -76,6 +108,8 @@
         }
         attr(root,'data-foundation-post-nav',swiper ? 'ready' : 'waiting');
         controls.forEach((node,index) => attr(node,'aria-disabled',disabled(index) ? 'true' : 'false'));
+        syncSlides(element);
+        syncAutoplay();
         if (swiper && status.textContent) status.textContent = '';
       }
       function schedule() {
@@ -92,6 +126,8 @@
         }
         if (disabled(index)) return;
         try {
+          userStopped = true;
+          pausedByPolicy = false;
           const speed = motion.matches ? 0 : undefined;
           if (index) swiper.slideNext(speed); else swiper.slidePrev(speed);
           sync();
@@ -117,6 +153,13 @@
       observer.observe(widget,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
       life.cleanup(() => observer.disconnect());
       life.listen(widget,'load',schedule,true);
+      life.listen(widget,'pointerdown',() => { userStopped = true; pausedByPolicy = false; });
+      life.listen(root,'focusin',schedule);
+      life.listen(root,'focusout',schedule);
+      life.listen(root,'mouseenter',schedule);
+      life.listen(root,'mouseleave',schedule);
+      life.listen(document,'visibilitychange',schedule);
+      life.listen(window,'scroll',schedule,{passive:true});
       life.listen(window,'resize',schedule);
       life.listen(window,'pageshow',schedule);
       life.listen(window,'load',schedule);
@@ -134,7 +177,7 @@
         });
       }
       life.cleanup(() => {
-        disconnectSwiper(); releaseId(); status.remove(); root.removeAttribute('data-foundation-post-nav');
+        restoreSlides(); disconnectSwiper(); releaseId(); status.remove(); root.removeAttribute('data-foundation-post-nav');
         savedControls.forEach(({node,attrs}) => attrs.forEach(([key,value]) => {
           if (value === null) node.removeAttribute(key); else node.setAttribute(key,value);
         }));
@@ -145,4 +188,3 @@
   if (window.FoundationWidgets) register();
   else document.addEventListener('foundation:widgets-ready', register, {once:true});
 })();
-
