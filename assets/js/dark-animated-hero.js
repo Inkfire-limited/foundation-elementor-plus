@@ -9,7 +9,11 @@
   const AUTOPLAY_STORAGE_KEY = 'foundation_inkfire_autoplay_mode_v1';
   const urlModeOverride = new URLSearchParams(window.location.search).get('foundation_inkfire_mode');
   const touchDeviceQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
-  const isTouchDevice = touchDeviceQuery.matches || navigator.maxTouchPoints > 0;
+  // Touch capability does not mean a mouse/trackpad is unavailable (hybrid PCs).
+  const hasFineHoverPointer = window.matchMedia('(any-hover: hover)').matches &&
+    window.matchMedia('(any-pointer: fine)').matches;
+  const isTouchDevice = touchDeviceQuery.matches && !hasFineHoverPointer;
+  const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || null;
   const saveDataEnabled = !!(connection && connection.saveData);
   const effectiveConnection = connection && typeof connection.effectiveType === 'string'
@@ -24,7 +28,7 @@
     ? window.FOUNDATION_INKFIRE_SPLASH_CONFIG.palette
     : defaultPalette;
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (reducedMotionQuery.matches || isTouchDevice || saveDataEnabled || hasVerySlowConnection) {
     splashSections.forEach(disableFluidForSection);
     return;
   }
@@ -42,16 +46,6 @@
       const storedMode = localStorage.getItem(AUTOPLAY_STORAGE_KEY);
       if (storedMode === 'hover') currentMode = storedMode;
     } catch (error) {}
-  }
-
-  if (isTouchDevice) {
-    splashSections.forEach(disableFluidForSection);
-    return;
-  }
-
-  if (saveDataEnabled || hasVerySlowConnection) {
-    splashSections.forEach(disableFluidForSection);
-    return;
   }
 
   let visibilityObserver = null;
@@ -74,9 +68,12 @@
             if (!entry.isIntersecting) {
               window.clearTimeout(state.bootTimeoutId);
               stopAutoplayLoop(state);
-              if (currentMode !== 'hover' || !state.section.matches(':hover')) {
-                setPaused(state, true);
-              }
+              clearHoverSettleTimers(state);
+              window.cancelAnimationFrame(state.hoverFrameId);
+              state.hoverFrameId = null;
+              state.hoverPoint = null;
+              endInteraction(state);
+              setPaused(state, true);
               return;
             }
 
@@ -114,7 +111,11 @@
   function hasWebGL() {
     try {
       const testCanvas = document.createElement('canvas');
-      return !!(testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl'));
+      const context = testCanvas.getContext('webgl2') || testCanvas.getContext('webgl') || testCanvas.getContext('experimental-webgl');
+      if (!context) return false;
+      const release = context.getExtension('WEBGL_lose_context');
+      if (release) release.loseContext();
+      return true;
     } catch (error) {
       return false;
     }
@@ -211,7 +212,8 @@
     const densityDissipation = 0.88;
     const velocityDissipation = 0.3;
 
-    window.foundationInkfireGenerateCanvas(canvas, {
+    try {
+      window.foundationInkfireGenerateCanvas(canvas, {
       SIM_RESOLUTION: simResolution,
       DYE_RESOLUTION: dyeResolution,
       MAX_PIXEL_RATIO: maxPixelRatio,
@@ -226,7 +228,12 @@
       BLOOM_SOFT_KNEE: bloomSoftKnee,
       PAUSED: false,
       BRAND_PALETTE: palette
-    });
+      });
+    } catch (error) {
+      // A blocked GPU or missing texture format must not break page content.
+      disableFluidForSection(section);
+      return null;
+    }
 
     const state = {
       section,
@@ -287,7 +294,7 @@
       state.canvas.__foundationInkfireFluid &&
       typeof state.canvas.__foundationInkfireFluid.pause === 'function'
     ) {
-      state.canvas.__foundationInkfireFluid.pause(!!isPaused);
+      state.canvas.__foundationInkfireFluid.pause(!!isPaused || reducedMotionQuery.matches || document.hidden);
     }
   }
 
@@ -347,7 +354,7 @@
   }
 
   function isHoverSuspended(state) {
-    return state.scrollSuspendUntil > performance.now();
+    return reducedMotionQuery.matches || document.hidden || !state.isVisible || state.scrollSuspendUntil > performance.now();
   }
 
   function suspendHoverForScroll(state, duration) {
@@ -365,6 +372,7 @@
   }
 
   function triggerHoverBurst(state, hoverEvent) {
+    if (reducedMotionQuery.matches || document.hidden || !state.isVisible) return;
     if (
       !state.canvas.__foundationInkfireFluid ||
       typeof state.canvas.__foundationInkfireFluid.triggerSplat !== 'function'
@@ -445,7 +453,7 @@
 
       const activePoint = state.hoverPoint;
       state.hoverPoint = null;
-      if (!activePoint) return;
+      if (!activePoint || isHoverSuspended(state)) return;
 
       const deltaX = activePoint.x - state.lastHoverX;
       const deltaY = activePoint.y - state.lastHoverY;
@@ -507,7 +515,7 @@
   }
 
   function runAutoplayLoop(state) {
-    if (currentMode !== 'auto' || document.hidden || !state.isVisible) return;
+    if (currentMode !== 'auto' || reducedMotionQuery.matches || document.hidden || !state.isVisible) return;
 
     if (
       state.canvas.__foundationInkfireFluid &&
@@ -554,7 +562,7 @@
 
   function startAutoplayLoop(state) {
     cancelAnimationFrame(state.animationFrameId);
-    if (!state.isVisible) return;
+    if (!state.isVisible || reducedMotionQuery.matches || document.hidden) return;
     state.pointerX = 0.5;
     state.pointerY = 0.5;
     state.velocityX = 0.012;
@@ -575,7 +583,7 @@
   }
 
   function primeVisibleSection(state) {
-    if (!state.isVisible) return;
+    if (!state.isVisible || reducedMotionQuery.matches || document.hidden) return;
 
     state.section.classList.add('foundation-inkfire-splash--active');
     setPaused(state, currentMode === 'auto' ? false : true);
@@ -705,6 +713,33 @@
     },
     { passive: true }
   );
+
+  // OS accessibility preferences can change without a navigation/reload.
+  function syncMotionPreference() {
+    const disabled = reducedMotionQuery.matches;
+    sectionStates.forEach((state) => {
+      window.clearTimeout(state.bootTimeoutId);
+      clearHoverSettleTimers(state);
+      stopAutoplayLoop(state);
+      window.cancelAnimationFrame(state.hoverFrameId);
+      state.hoverFrameId = null;
+      state.hoverPoint = null;
+      endInteraction(state);
+      state.section.classList.remove('foundation-inkfire-splash--active');
+      state.canvas.style.display = disabled ? 'none' : '';
+      const mask = state.section.querySelector('.foundation-inkfire-splash__mask');
+      if (mask) mask.style.display = disabled ? 'none' : '';
+      setPaused(state, true);
+      if (!disabled && currentMode === 'auto' && state.isVisible && !document.hidden) {
+        primeVisibleSection(state);
+      }
+    });
+  }
+  if (typeof reducedMotionQuery.addEventListener === 'function') {
+    reducedMotionQuery.addEventListener('change', syncMotionPreference);
+  } else if (typeof reducedMotionQuery.addListener === 'function') {
+    reducedMotionQuery.addListener(syncMotionPreference);
+  }
 
   updateMode(currentMode);
   sectionStates.forEach((state) => {

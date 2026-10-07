@@ -504,7 +504,7 @@ final class Dark_Animated_Hero_Renderer {
 			data-foundation-inkfire-splash
 			data-palette="<?php echo esc_attr( $palette_attr ); ?>"
 			data-palette-key="<?php echo esc_attr( '' !== $palette_key ? $palette_key : $preset_palette ); ?>"
-			role="banner"
+			role="region"
 			aria-labelledby="<?php echo esc_attr( $section_id . '-heading' ); ?>"
 			aria-describedby="<?php echo esc_attr( $section_id . '-subhead' ); ?>"
 			style="<?php echo esc_attr( $inline_styles ); ?>"
@@ -1448,7 +1448,7 @@ final class Dark_Animated_Hero_Renderer {
 			return '';
 		}
 
-		$output  = '<div class="foundation-inkfire-avatar-group" role="img" aria-label="Inkfire team: disabled-led creative and tech experts">';
+		$output  = '<div class="foundation-inkfire-avatar-group" role="group" aria-label="Inkfire team: disabled-led creative and tech experts">';
 		$output .= '<div class="foundation-inkfire-avatars" aria-hidden="true">';
 
 		foreach ( $team_images as $index => $url ) {

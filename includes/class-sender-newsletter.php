@@ -14,6 +14,14 @@ class Sender_Newsletter {
 	public function hooks() {
 		add_action( 'wp_ajax_' . self::AJAX_ACTION, array( $this, 'handle_subscribe' ) );
 		add_action( 'wp_ajax_nopriv_' . self::AJAX_ACTION, array( $this, 'handle_subscribe' ) );
+		add_action( 'wp_ajax_foundation_sender_nonce', array( $this, 'handle_nonce' ) );
+		add_action( 'wp_ajax_nopriv_foundation_sender_nonce', array( $this, 'handle_nonce' ) );
+	}
+
+	/** Refresh a public form nonce without exposing account settings or subscribing. */
+	public function handle_nonce() {
+		nocache_headers();
+		wp_send_json_success( array( 'nonce' => wp_create_nonce( self::NONCE_ACTION ) ) );
 	}
 
 	/**
@@ -84,6 +92,7 @@ class Sender_Newsletter {
 		if ( ! check_ajax_referer( self::NONCE_ACTION, 'nonce', false ) ) {
 			wp_send_json_error(
 				array(
+					'code'    => 'nonce_expired',
 					'message' => __( 'Security check failed. Please refresh and try again.', 'foundation-elementor-plus' ),
 				),
 				403

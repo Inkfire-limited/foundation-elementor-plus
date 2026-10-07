@@ -1012,7 +1012,11 @@
     white-space: nowrap;
     width: auto;
     max-width: none;
-    font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: normal;
+    letter-spacing: normal;
+    text-transform: none;
     background: linear-gradient(135deg, #F7997F 0%, #F9B39F 25%, #FAC0AF 50%, #FBCCBF 75%, #F7DFD9 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -1402,7 +1406,6 @@
     }
 
     .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-kicker {
-        font-size: clamp(1.3rem, 7vw, 1.8rem);
         white-space: normal;
     }
 
@@ -1983,8 +1986,7 @@
         font-size: 0.94rem;
     }
 
-    .foundation-inkfire-splash--preset-portfolio-archive .foundation-inkfire-kicker,
-    .foundation-inkfire-splash--preset-portfolio-post .foundation-inkfire-kicker {
+    .foundation-inkfire-splash--preset-portfolio-archive .foundation-inkfire-kicker {
         font-size: 1.75rem;
     }
 

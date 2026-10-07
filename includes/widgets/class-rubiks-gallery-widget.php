@@ -387,7 +387,7 @@ class Rubiks_Gallery_Widget extends Widget_Base {
 					</div>
 				<?php endforeach; ?>
 			</div>
-			<script type="application/json" class="foundation-rubiks-gallery__data"><?php echo wp_json_encode( $items ); ?></script>
+			<script type="application/json" class="foundation-rubiks-gallery__data"><?php echo wp_json_encode( $items, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ); ?></script>
 		</section>
 		<?php
 	}
@@ -471,7 +471,6 @@ class Rubiks_Gallery_Widget extends Widget_Base {
 					class="foundation-rubiks-gallery__video"
 					src="<?php echo esc_url( $item['video_url'] ); ?>"
 					<?php echo $poster_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-					autoplay
 					muted
 					loop
 					playsinline

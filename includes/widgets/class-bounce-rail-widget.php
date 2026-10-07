@@ -514,7 +514,7 @@ class Bounce_Rail_Widget extends Widget_Base {
 			array(
 				'timeout' => 12,
 				'headers' => array(
-					'User-Agent' => 'Mozilla/5.0 (compatible; FoundationElementorPlus/1.0; +https://inkfire.co.uk)',
+					'User-Agent' => 'Mozilla/5.0 (compatible; FoundationElementorPlus/1.0; +https://mediumblue-seal-942128.hostingersite.com)',
 				),
 			)
 		);

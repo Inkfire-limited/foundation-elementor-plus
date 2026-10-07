@@ -458,7 +458,7 @@ class Inkfire_Linktree_Widget extends Widget_Base {
 		);
 
 		$this->add_contact_controls( 'phone', 'Call', '+44 (0)333 613 4653' );
-		$this->add_contact_controls( 'email', 'Email', 'hello@inkfire.co.uk' );
+		$this->add_contact_controls( 'email', 'Email', 'hello@mediumblue-seal-942128.hostingersite.com' );
 		$this->add_contact_controls( 'hours', 'Office hours', 'Mon – Fri, 9am – 5pm (UK time)' );
 
 		$this->add_control(

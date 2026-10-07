@@ -789,7 +789,7 @@ class Y_Hero_Widget extends Widget_Base {
 				'type'        => Controls_Manager::MEDIA,
 				'label_block' => true,
 				'default'     => array(
-					'url' => 'https://beta.inkfire.co.uk/wp-content/uploads/2025/12/Untitled-1.png',
+					'url' => 'https://beta.mediumblue-seal-942128.hostingersite.com/wp-content/uploads/2025/12/Untitled-1.png',
 				),
 				'dynamic'     => array(
 					'active' => true,
@@ -801,9 +801,35 @@ class Y_Hero_Widget extends Widget_Base {
 		);
 
 		$this->add_responsive_control(
+			'shell_overlay_fit',
+			array(
+				'label'       => esc_html__( 'Overlay Fit', 'foundation-elementor-plus' ),
+				'description' => esc_html__( 'Cover fills the panel by cropping, not stretching. All modes preserve the image proportions.', 'foundation-elementor-plus' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => 'cover',
+				'options'     => array(
+					'cover'         => esc_html__( 'Cover', 'foundation-elementor-plus' ),
+					'contain'       => esc_html__( 'Contain (whole image)', 'foundation-elementor-plus' ),
+					'custom-width'  => esc_html__( 'Custom width (automatic height)', 'foundation-elementor-plus' ),
+					'custom-height' => esc_html__( 'Custom height (automatic width)', 'foundation-elementor-plus' ),
+				),
+				'selectors_dictionary' => array(
+					'cover'         => 'cover',
+					'contain'       => 'contain',
+					'custom-width'  => 'var(--foundation-y-hero-overlay-width) auto',
+					'custom-height' => 'auto var(--foundation-y-hero-overlay-height)',
+				),
+				'selectors'   => array(
+					'{{WRAPPER}} .foundation-y-hero__shell' => '--foundation-y-hero-overlay-size: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
 			'shell_overlay_width',
 			array(
 				'label'      => esc_html__( 'Overlay Width', 'foundation-elementor-plus' ),
+				'description' => esc_html__( 'Used only with Custom width fit. Height follows the original image proportions.', 'foundation-elementor-plus' ),
 				'type'       => Controls_Manager::SLIDER,
 				'size_units' => array( 'px', '%', 'vw', 'vh', 'em', 'rem' ),
 				'default'    => array(
@@ -846,6 +872,7 @@ class Y_Hero_Widget extends Widget_Base {
 			'shell_overlay_height',
 			array(
 				'label'      => esc_html__( 'Overlay Height', 'foundation-elementor-plus' ),
+				'description' => esc_html__( 'Used only with Custom height fit. Width follows the original image proportions.', 'foundation-elementor-plus' ),
 				'type'       => Controls_Manager::SLIDER,
 				'size_units' => array( 'px', '%', 'vw', 'vh', 'em', 'rem' ),
 				'default'    => array(

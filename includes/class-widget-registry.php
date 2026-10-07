@@ -143,6 +143,7 @@ final class Widget_Registry {
 	public static function get_asset_map() {
 		return array(
 			'styles'  => array(
+				'foundation-elementor-plus-reliability' => 'assets/css/frontend-reliability.css',
 				'foundation-elementor-plus-dark-animated-hero' => 'assets/css/dark-animated-hero.css',
 				'foundation-elementor-plus-mobile-header' => 'assets/css/mobile-header.css',
 				'foundation-elementor-plus-selector-stack' => 'assets/css/selector-stack.css',
@@ -159,28 +160,29 @@ final class Widget_Registry {
 				'foundation-elementor-plus-sender-newsletter' => 'assets/css/sender-newsletter.css',
 			),
 			'scripts' => array(
+				'foundation-elementor-plus-runtime' => array( 'path' => 'assets/js/widget-runtime.js', 'deps' => array( 'jquery' ) ),
 				'foundation-elementor-plus-fluid-core' => 'assets/vendor/fluid-core.js',
 				'foundation-elementor-plus-lottie'     => 'assets/vendor/lottie.min.js',
 				'foundation-elementor-plus-dark-animated-hero' => array(
 					'path' => 'assets/js/dark-animated-hero.js',
 					'deps' => array( 'foundation-elementor-plus-fluid-core' ),
 				),
-				'foundation-elementor-plus-mobile-header' => 'assets/js/mobile-header.js',
-				'foundation-elementor-plus-selector-stack' => 'assets/js/selector-stack.js',
-				'foundation-elementor-plus-y-hero'         => 'assets/js/y-hero.js',
-				'foundation-elementor-plus-bounce-rail'    => 'assets/js/bounce-rail.js',
-				'foundation-elementor-plus-process-carousel' => 'assets/js/process-carousel.js',
-				'foundation-elementor-plus-portfolio-mosaic' => 'assets/js/portfolio-mosaic.js',
+				'foundation-elementor-plus-mobile-header' => array( 'path' => 'assets/js/reliable/mobile-header.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-selector-stack' => array( 'path' => 'assets/js/reliable/selector-stack.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-y-hero'         => array( 'path' => 'assets/js/reliable/y-hero.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-bounce-rail'    => array( 'path' => 'assets/js/reliable/bounce-rail.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-process-carousel' => array( 'path' => 'assets/js/reliable/process-carousel.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-portfolio-mosaic' => array( 'path' => 'assets/js/reliable/portfolio-mosaic.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
 				'foundation-elementor-plus-portfolio-mega-menu' => 'assets/js/portfolio-mega-menu.js',
-				'foundation-elementor-plus-awards-wall'      => 'assets/js/awards-wall.js',
-				'foundation-elementor-plus-live-roles'       => 'assets/js/live-roles.js',
-				'foundation-elementor-plus-live-events'      => 'assets/js/live-events.js',
-				'foundation-elementor-plus-team-loop'        => 'assets/js/team-loop.js',
+				'foundation-elementor-plus-awards-wall'      => array( 'path' => 'assets/js/reliable/awards-wall.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-live-roles'       => array( 'path' => 'assets/js/reliable/live-roles.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-live-events'      => array( 'path' => 'assets/js/reliable/live-events.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
+				'foundation-elementor-plus-team-loop'        => array( 'path' => 'assets/js/reliable/team-loop.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
 				'foundation-elementor-plus-rubiks-gallery'   => array(
-					'path' => 'assets/js/rubiks-gallery.js',
-					'deps' => array( 'foundation-elementor-plus-lottie' ),
+					'path' => 'assets/js/reliable/rubiks-gallery.js',
+					'deps' => array( 'foundation-elementor-plus-lottie', 'foundation-elementor-plus-runtime' ),
 				),
-				'foundation-elementor-plus-sender-newsletter' => 'assets/js/sender-newsletter.js',
+				'foundation-elementor-plus-sender-newsletter' => array( 'path' => 'assets/js/reliable/sender-newsletter.js', 'deps' => array( 'foundation-elementor-plus-runtime' ) ),
 			),
 		);
 	}

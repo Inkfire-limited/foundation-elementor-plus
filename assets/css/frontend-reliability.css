@@ -1,0 +1,46 @@
+/* Functional visibility: hidden controls must not be revived by widget layout rules. */
+.inkfire-mobile-header [hidden],
+.foundation-live-roles [hidden],
+.foundation-live-events [hidden],
+.foundation-team-loop [hidden],
+.foundation-portfolio-mosaic [hidden] { display: none !important; }
+/* Respect containing blocks and reduced motion without changing ancestor layout. */
+.inkfire-selector--static { min-height: 0 !important; }
+.inkfire-selector--static .inkfire-selector__layout { position: relative !important; inset: auto !important; width: 100% !important; }
+.inkfire-selector--static .inkfire-selector__stage { height: auto !important; min-height: 0; overflow: visible; display: grid; gap: 24px; }
+.inkfire-selector--static .inkfire-selector__card { position: relative; inset: auto; opacity: 1; pointer-events: auto; transform: none !important; will-change: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .inkfire-mobile-header *, .inkfire-mobile-header *::before, .inkfire-mobile-header *::after,
+  .inkfire-selector *, .foundation-y-hero *, .foundation-process-carousel *,
+  .foundation-portfolio-mosaic *, .foundation-rubiks-gallery * {
+    animation: none !important; transition: none !important; scroll-behavior: auto !important;
+  }
+}
+.foundation-rubiks-gallery__pause { position: absolute; right: 8px; bottom: 8px; z-index: 5; max-width: calc(100% - 16px); padding: .5rem .8rem; border: 1px solid currentColor; border-radius: 8px; background: #151622; color: #fff; font: inherit; cursor: pointer; }
+.foundation-rubiks-gallery__pause:focus-visible { outline: 3px solid #04ad93; outline-offset: 3px; }
+.foundation-rubiks-gallery__pause[hidden] { display: none !important; }
+
+/* Header geometry is shared with only the first page hero, not every section. */
+[data-foundation-header-clearance] {
+  padding-top: max(var(--foundation-header-base-padding, 0px), var(--foundation-header-required-padding, 0px)) !important;
+}
+/* A desktop mega-menu inside the pinned header needs its own bounded scrollport. */
+.elementor-location-header .e-n-menu .e-n-menu-content > .foundation-mega-viewport {
+  box-sizing: border-box;
+  min-height: 0 !important;
+  max-height: var(--foundation-mega-available-height) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scroll-padding-block: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+.elementor-location-header .e-n-menu .e-n-menu-content > .foundation-mega-viewport > .e-con-inner {
+  height: auto;
+  flex: 0 0 auto;
+}
+.elementor-location-header .foundation-mega-viewport:focus-visible {
+  outline: 2px solid #42dfd0;
+  outline-offset: 2px;
+}
