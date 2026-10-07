@@ -149,6 +149,16 @@ final class Header_Banner {
 				top: calc(var(--foundation-header-banner-offset, 0px) + 52px) !important;
 			}
 
+			/* The desktop capsule has a 20px top offset plus 20px inner padding.
+			   Match that 40px clearance on the unpadded mobile/tablet container. */
+			.elementor-location-header .elementor-element-5b9178a {
+				top: calc(var(--foundation-header-banner-offset, 0px) + 40px) !important;
+			}
+
+			body.admin-bar .elementor-location-header .elementor-element-5b9178a {
+				top: calc(var(--foundation-header-banner-offset, 0px) + 72px) !important;
+			}
+
 			.foundation-header-build-banner-wrap {
 				position: relative;
 				width: 100%;
@@ -306,12 +316,16 @@ final class Header_Banner {
 			}
 
 			@media (max-width: 782px) {
+				body.admin-bar .elementor-location-header .elementor-element-5b9178a {
+					top: calc(var(--foundation-header-banner-offset, 0px) + 86px) !important;
+				}
+
 				body.admin-bar .elementor-location-header .elementor-element-c1a7520 {
 					top: calc(var(--foundation-header-banner-offset, 0px) + 66px) !important;
 				}
 			}
 		</style>
-		<script>
+		<script data-cfasync="false">
 			(function() {
 				if (<?php echo $is_preview ? 'true' : 'false'; ?>) {
 					return;
@@ -325,11 +339,16 @@ final class Header_Banner {
 					document.documentElement.style.setProperty('--foundation-header-banner-offset', banner.offsetHeight + 'px');
 				}
 
-				if (document.readyState === 'loading') {
-					document.addEventListener('DOMContentLoaded', setFoundationBannerOffset, { once: true });
-				} else {
-					setFoundationBannerOffset();
-				}
+				// The banner markup is emitted immediately above this script (same
+				// render() output), so it already exists in the DOM right now -
+				// no need to wait for DOMContentLoaded. Waiting meant the static
+				// CSS fallback (65px/108px) stayed in effect, and everything
+				// positioned against --foundation-header-banner-offset, until the
+				// rest of this Elementor-heavy page had finished parsing, then
+				// visibly snapped into place. data-cfasync="false" keeps Cloudflare
+				// Rocket Loader from deferring this further, matching the same
+				// exclusion already used for the calculator's own loader script.
+				setFoundationBannerOffset();
 
 				window.addEventListener('load', setFoundationBannerOffset);
 				window.addEventListener('resize', setFoundationBannerOffset);

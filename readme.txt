@@ -33,7 +33,7 @@ Key points:
 
 This plugin includes a built-in GitHub updater aimed at the repository:
 
-`Inkfire-limited/foundation-elementor-plus`
+`hawks010/foundation-elementor-plus`
 
 Recommended release flow:
 

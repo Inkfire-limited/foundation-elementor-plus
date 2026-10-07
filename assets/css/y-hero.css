@@ -1,9 +1,10 @@
 .foundation-y-hero {
   --foundation-y-hero-shell-radius: 48px;
-  --foundation-y-hero-overlay-image: url("https://beta.inkfire.co.uk/wp-content/uploads/2025/12/Untitled-1.png");
+  --foundation-y-hero-overlay-image: url("https://beta.mediumblue-seal-942128.hostingersite.com/wp-content/uploads/2025/12/Untitled-1.png");
   --foundation-y-hero-overlay-opacity: 0.08;
   --foundation-y-hero-overlay-width: 102%;
   --foundation-y-hero-overlay-height: 102%;
+  --foundation-y-hero-overlay-size: cover;
   --foundation-y-hero-overlay-position-x: 50%;
   --foundation-y-hero-overlay-position-y: 50%;
   --foundation-y-hero-grid-gap: 64px;
@@ -60,7 +61,8 @@
   background-image: var(--foundation-y-hero-overlay-image);
   background-position: var(--foundation-y-hero-overlay-position-x) var(--foundation-y-hero-overlay-position-y);
   background-repeat: no-repeat;
-  background-size: var(--foundation-y-hero-overlay-width) var(--foundation-y-hero-overlay-height);
+  /* Crop the artwork proportionally; never stretch width and height independently. */
+  background-size: var(--foundation-y-hero-overlay-size, cover);
   opacity: var(--foundation-y-hero-overlay-opacity);
   filter: grayscale(100%) drop-shadow(0 12px 24px rgba(255, 255, 255, 0.14)) drop-shadow(0 18px 28px rgba(17, 19, 29, 0.12));
 }

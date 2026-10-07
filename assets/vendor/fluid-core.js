@@ -107,12 +107,15 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
     var isWebGL2 = !!gl
     if (!isWebGL2) gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params)
 
+    if (!gl) throw new Error('Inkfire hero: WebGL is unavailable')
+
     var halfFloat, supportLinearFiltering
     if (isWebGL2) {
       gl.getExtension('EXT_color_buffer_float')
       supportLinearFiltering = gl.getExtension('OES_texture_float_linear')
     } else {
       halfFloat = gl.getExtension('OES_texture_half_float')
+      if (!halfFloat) throw new Error('Inkfire hero: floating-point textures are unavailable')
       supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear')
     }
     // Set Default Clear Color to Dark
@@ -128,6 +131,9 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
       formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
       formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
       formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
+    }
+    if (!formatRGBA || !formatRG || !formatR) {
+      throw new Error('Inkfire hero: renderable floating-point textures are unavailable')
     }
     return {
       gl: gl,
@@ -165,6 +171,9 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo)
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0)
     var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+    gl.deleteFramebuffer(fbo)
+    gl.deleteTexture(texture)
     return status === gl.FRAMEBUFFER_COMPLETE
   }
   function isMobile() {
@@ -430,6 +439,9 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
     else dye = resizeDoubleFBO(dye, dyeRes.width, dyeRes.height, rgba.internalFormat, rgba.format, texType, filtering)
     if (!velocity) velocity = createDoubleFBO(simRes.width, simRes.height, rg.internalFormat, rg.format, texType, filtering)
     else velocity = resizeDoubleFBO(velocity, simRes.width, simRes.height, rg.internalFormat, rg.format, texType, filtering)
+    disposeFBO(divergence)
+    disposeFBO(curl)
+    disposeDoubleFBO(pressure)
     divergence = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST)
     curl = createFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST)
     pressure = createDoubleFBO(simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST)
@@ -437,6 +449,8 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
     initSunraysFramebuffers()
   }
   function initBloomFramebuffers() {
+    disposeFBO(bloom)
+    bloomFramebuffers.forEach(disposeFBO)
     var res = getResolution(config.BLOOM_RESOLUTION)
     var texType = ext.halfFloatTexType
     var rgba = ext.formatRGBA
@@ -452,12 +466,25 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
     }
   }
   function initSunraysFramebuffers() {
+    disposeFBO(sunrays)
+    disposeFBO(sunraysTemp)
     var res = getResolution(config.SUNRAYS_RESOLUTION)
     var texType = ext.halfFloatTexType
     var r = ext.formatR
     var filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST
     sunrays = createFBO(res.width, res.height, r.internalFormat, r.format, texType, filtering)
     sunraysTemp = createFBO(res.width, res.height, r.internalFormat, r.format, texType, filtering)
+  }
+  // A resize replaces GPU allocations; release their previous owners first.
+  function disposeFBO(target) {
+    if (!target) return
+    gl.deleteTexture(target.texture)
+    gl.deleteFramebuffer(target.fbo)
+  }
+  function disposeDoubleFBO(target) {
+    if (!target) return
+    disposeFBO(target.read)
+    disposeFBO(target.write)
   }
   function createFBO(w, h, internalFormat, format, type, param) {
     gl.activeTexture(gl.TEXTURE0)
@@ -519,11 +546,13 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
     copyProgram.bind()
     gl.uniform1i(copyProgram.uniforms.uTexture, target.attach(0))
     blit(newFBO)
+    disposeFBO(target)
     return newFBO
   }
   function resizeDoubleFBO(target, w, h, internalFormat, format, type, param) {
     if (target.width === w && target.height === h) return target
     target.read = resizeFBO(target.read, w, h, internalFormat, format, type, param)
+    disposeFBO(target.write)
     target.write = createFBO(w, h, internalFormat, format, type, param)
     target.width = w
     target.height = h
@@ -899,10 +928,8 @@ function foundationInkfireGenerateCanvas(canvas, overrideConfig) {
     var pointer = pointers[0]
     if (pointer) updatePointerUpData(pointer)
   })
-  window.addEventListener('keydown', function (e) {
-    if (e.code === 'KeyP') config.PAUSED = !config.PAUSED
-    if (e.key === ' ') splatStack.push(Math.floor(Math.random() * 20) + 5)
-  })
+  // Decorative effects must not intercept typing or keyboard scrolling.
+  // Playback is controlled by the hero controller, never global demo hotkeys.
   function updatePointerDownData(pointer, id, posX, posY) {
     pointer.id = id
     pointer.down = true

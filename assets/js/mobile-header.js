@@ -1,10 +1,13 @@
 (function () {
+  if (window.foundationInkfireMobileHeaderLoaded) return;
+  window.foundationInkfireMobileHeaderLoaded = true;
+  const initializedHeaders = new WeakSet();
   let observerStarted = false;
   let healthCheckScheduled = false;
   let warnedAboutMissingInit = false;
 
   function setupHeader(root) {
-    if (!root || root.dataset.inkfireHeaderInitialized === 'true') {
+    if (!root || initializedHeaders.has(root)) {
       return false;
     }
 
@@ -21,10 +24,17 @@
       return false;
     }
 
+    initializedHeaders.add(root);
     root.dataset.inkfireHeaderInitialized = 'true';
+    let previousBodyOverflow = null;
+    let returnFocus = null;
 
     function clearBodyScrollLock() {
-      document.body.style.overflow = '';
+      if (previousBodyOverflow !== null) {
+        document.body.style.overflow = previousBodyOverflow;
+        previousBodyOverflow = null;
+      }
+      if (document.querySelector('[data-inkfire-header] .imh-menu.is-open')) return;
       document.body.classList.remove('foundation-mobile-header-open');
       document.documentElement.classList.remove('foundation-mobile-header-open');
     }
@@ -32,6 +42,7 @@
     function setSearchState(isOpen) {
       searchSheets.forEach((sheet) => {
         sheet.hidden = !isOpen;
+        sheet.inert = !isOpen;
       });
       searchToggles.forEach((toggle) => {
         toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
@@ -39,6 +50,11 @@
     }
 
     function setMenuState(isOpen) {
+      const wasOpen = menu.classList.contains('is-open');
+      if (isOpen && !wasOpen) {
+        previousBodyOverflow = document.body.style.overflow;
+        returnFocus = document.activeElement;
+      }
       menu.classList.toggle('is-open', isOpen);
       menu.hidden = !isOpen;
       menu.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
@@ -59,6 +75,12 @@
 
       if (!isOpen) {
         setSearchState(false);
+        if (wasOpen && menu.contains(document.activeElement) && returnFocus && returnFocus.isConnected) {
+          returnFocus.focus({ preventScroll: true });
+        }
+      } else if (!wasOpen) {
+        const first = menu.querySelector('button:not([disabled]), a[href], input:not([disabled])');
+        if (first) first.focus({ preventScroll: true });
       }
     }
 
@@ -102,9 +124,33 @@
     });
 
     document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && (menu.classList.contains('is-open') || root.querySelector('.imh-search-sheet:not([hidden])'))) {
         setMenuState(false);
       }
+      if (event.key !== 'Tab' || !menu.classList.contains('is-open')) return;
+      const focusable = Array.from(menu.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+        .filter((node) => !node.closest('[hidden], [inert]') && node.getClientRects().length && getComputedStyle(node).visibility !== 'hidden');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first) return;
+      if (event.shiftKey && (document.activeElement === first || !menu.contains(document.activeElement))) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !menu.contains(document.activeElement))) {
+        event.preventDefault(); first.focus();
+      }
+    });
+
+    // Release the menu before a link opens another dialog or changes the page.
+    // Leave navigation and the destination controller in charge of the click.
+    menu.addEventListener('click', function (event) {
+      const link = event.target instanceof Element ? event.target.closest('a[href]') : null;
+      if (link && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && event.button === 0) setMenuState(false);
+    });
+    window.addEventListener('resize', function () {
+      if (menu.classList.contains('is-open') && (!root.getClientRects().length || getComputedStyle(root).visibility === 'hidden')) setMenuState(false);
+    });
+    window.addEventListener('pageshow', function (event) {
+      if (event.persisted) setMenuState(false);
     });
 
     accordionItems.forEach((item) => {
@@ -225,7 +271,7 @@
       });
     });
 
-    clearBodyScrollLock();
+    setSearchState(false);
     return true;
   }
 

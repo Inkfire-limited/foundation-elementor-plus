@@ -1,0 +1,25 @@
+/* Leave the icon widget's authored colour, size, padding and radius in charge. */
+.foundation-post-carousel button.elementor-icon {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+.foundation-post-carousel .foundation-post-prev .elementor-icon:focus-visible,
+.foundation-post-carousel .foundation-post-next .elementor-icon:focus-visible {
+  outline: 3px solid #fbccbf;
+  outline-offset: 4px;
+}
+.foundation-post-carousel .elementor-icon[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+/* Only hide Elementor's controls once the matching replacement is operational. */
+.foundation-post-carousel[data-foundation-post-nav="ready"] .foundation-post-slider > .elementor-swiper-button,
+.foundation-post-carousel[data-foundation-post-nav="ready"] .foundation-post-slider > .elementor-widget-container > .elementor-swiper-button {
+  display: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .foundation-post-carousel .elementor-icon { transition: none !important; }
+}

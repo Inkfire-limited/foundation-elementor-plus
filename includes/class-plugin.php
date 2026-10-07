@@ -119,8 +119,8 @@ final class Plugin {
 
 			wp_register_style(
 				$handle,
-				$file_url,
-				array(),
+				add_query_arg( '_litespeed_rm_qs', '0', $file_url ),
+				'foundation-elementor-plus-reliability' === $handle ? array() : array( 'foundation-elementor-plus-reliability' ),
 				file_exists( $file_path ) ? (string) filemtime( $file_path ) : FOUNDATION_ELEMENTOR_PLUS_VERSION
 			);
 		}
@@ -141,6 +141,12 @@ final class Plugin {
 			$script_deps = is_array( $relative_path ) ? ( $relative_path['deps'] ?? array() ) : array();
 			$file_path   = FOUNDATION_ELEMENTOR_PLUS_PATH . ltrim( $script_path, '/' );
 			$file_url    = FOUNDATION_ELEMENTOR_PLUS_URL . ltrim( $script_path, '/' );
+
+			// Keep release versions on hero and menu assets, even when LiteSpeed
+			// removes query strings globally. Returning visitors must receive fixes.
+			if ( in_array( $handle, array( 'foundation-elementor-plus-fluid-core', 'foundation-elementor-plus-dark-animated-hero', 'foundation-elementor-plus-mobile-header', 'foundation-elementor-plus-portfolio-mega-menu' ), true ) ) {
+				$file_url = add_query_arg( '_litespeed_rm_qs', '0', $file_url );
+			}
 
 			wp_register_script(
 				$handle,
@@ -175,8 +181,8 @@ final class Plugin {
 
 		return str_replace(
 			array(
-				'https://beta.inkfire.co.uk/wp-content/uploads/',
-				'http://beta.inkfire.co.uk/wp-content/uploads/',
+				'https://beta.mediumblue-seal-942128.hostingersite.com/wp-content/uploads/',
+				'http://beta.mediumblue-seal-942128.hostingersite.com/wp-content/uploads/',
 			),
 			$live_upload_base,
 			$content
@@ -462,7 +468,7 @@ final class Plugin {
 				),
 				array(
 					'label'   => esc_html__( 'GitHub backup', 'foundation-elementor-plus' ),
-					'href'    => 'https://github.com/Inkfire-limited/foundation-elementor-plus',
+					'href'    => 'https://github.com/hawks010/foundation-elementor-plus',
 					'target'  => '_blank',
 					'variant' => 'ghost',
 				),

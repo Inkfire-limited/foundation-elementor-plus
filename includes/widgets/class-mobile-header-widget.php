@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/class-mobile-header-actions.php';
+
 class Mobile_Header_Widget extends Widget_Base {
 	public function get_name() {
 		return 'foundation-mobile-header';
@@ -42,6 +44,7 @@ class Mobile_Header_Widget extends Widget_Base {
 
 	protected function register_controls() {
 		$this->register_general_controls();
+		$this->register_topbar_action_controls();
 		$this->register_quick_action_controls();
 		$this->register_menu_controls();
 		$this->register_footer_controls();
@@ -61,7 +64,6 @@ class Mobile_Header_Widget extends Widget_Base {
 		$menu_sections   = ! empty( $settings['menu_sections'] ) && is_array( $settings['menu_sections'] ) ? array_values( $settings['menu_sections'] ) : array();
 		$menu_sections   = $this->normalize_panel_keys( $this->backfill_menu_sections( $menu_sections ) );
 		$social_links    = ! empty( $settings['social_links'] ) && is_array( $settings['social_links'] ) ? array_values( $settings['social_links'] ) : array();
-		$inline_actions  = $this->get_inline_actions( $quick_actions );
 		$default_index   = $this->get_default_open_index( $menu_sections );
 
 		if ( empty( $menu_sections ) ) {
@@ -78,16 +80,7 @@ class Mobile_Header_Widget extends Widget_Base {
 						<?php endif; ?>
 					</a>
 
-					<?php if ( count( $inline_actions ) >= 2 ) : ?>
-						<div class="imh-inline-cta" role="group" aria-label="<?php esc_attr_e( 'Header call to actions', 'foundation-elementor-plus' ); ?>">
-							<?php foreach ( $inline_actions as $action_index => $action ) : ?>
-								<a class="imh-inline-cta-btn<?php echo 1 === $action_index ? ' is-active' : ''; ?>" href="<?php echo esc_url( $action['url'] ); ?>" data-cta-pill="<?php echo esc_attr( 0 === $action_index ? 'first' : 'second' ); ?>">
-									<?php echo esc_html( $action['label'] ); ?>
-								</a>
-							<?php endforeach; ?>
-							<span class="imh-inline-cta-pill" aria-hidden="true"></span>
-						</div>
-					<?php endif; ?>
+					<?php Mobile_Header_Actions::render( $settings, $social_links ); ?>
 
 					<button type="button" class="imh-icon-button imh-search-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $widget_id ); ?>-search">
 						<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
@@ -130,16 +123,7 @@ class Mobile_Header_Widget extends Widget_Base {
 								<?php endif; ?>
 							</a>
 
-							<?php if ( count( $inline_actions ) >= 2 ) : ?>
-								<div class="imh-inline-cta" role="group" aria-label="<?php esc_attr_e( 'Header call to actions', 'foundation-elementor-plus' ); ?>">
-									<?php foreach ( $inline_actions as $action_index => $action ) : ?>
-										<a class="imh-inline-cta-btn<?php echo 1 === $action_index ? ' is-active' : ''; ?>" href="<?php echo esc_url( $action['url'] ); ?>" data-cta-pill="<?php echo esc_attr( 0 === $action_index ? 'first' : 'second' ); ?>">
-											<?php echo esc_html( $action['label'] ); ?>
-										</a>
-									<?php endforeach; ?>
-									<span class="imh-inline-cta-pill" aria-hidden="true"></span>
-								</div>
-							<?php endif; ?>
+							<?php Mobile_Header_Actions::render( $settings, $social_links ); ?>
 
 							<button type="button" class="imh-icon-button imh-search-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $widget_id ); ?>-search-menu">
 								<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
@@ -397,6 +381,34 @@ class Mobile_Header_Widget extends Widget_Base {
 			</aside>
 		</div>
 		<?php
+	}
+
+	private function register_topbar_action_controls() {
+		$this->start_controls_section( 'section_topbar_actions', array(
+			'label' => esc_html__( 'Header Actions', 'foundation-elementor-plus' ),
+		) );
+		$this->add_control( 'show_topbar_project', array(
+			'label' => esc_html__( 'Show Project Calculator CTA', 'foundation-elementor-plus' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'return_value' => 'yes',
+			'description' => esc_html__( 'Uses the existing project calculator launcher, with Contact Us as the no-JavaScript fallback.', 'foundation-elementor-plus' ),
+		) );
+		$this->add_control( 'topbar_project_label', array(
+			'label' => esc_html__( 'Compact Project Label', 'foundation-elementor-plus' ),
+			'type' => Controls_Manager::TEXT,
+			'default' => esc_html__( 'Start project', 'foundation-elementor-plus' ),
+			'condition' => array( 'show_topbar_project' => 'yes' ),
+			'description' => esc_html__( 'Shown when the bar has room. Narrow layouts keep a labelled project icon.', 'foundation-elementor-plus' ),
+		) );
+		$this->add_control( 'show_topbar_socials', array(
+			'label' => esc_html__( 'Show Tablet Social Icons', 'foundation-elementor-plus' ),
+			'type' => Controls_Manager::SWITCHER,
+			'default' => 'yes',
+			'return_value' => 'yes',
+			'description' => esc_html__( 'Reuses Social Links from Menu Footer. Icons reduce as space narrows; all existing links remain in the menu.', 'foundation-elementor-plus' ),
+		) );
+		$this->end_controls_section();
 	}
 
 	private function register_general_controls() {
@@ -1397,7 +1409,7 @@ class Mobile_Header_Widget extends Widget_Base {
 		$resource_rows = implode(
 			"\n",
 			array(
-				'Browse | Knowledge Base | Step-by-step guides and troubleshooting help | https://help.inkfire.co.uk/',
+				'Browse | Knowledge Base | Step-by-step guides and troubleshooting help | https://help.mediumblue-seal-942128.hostingersite.com/',
 				'Browse | Press, Media & Community Highlights | Announcements and interviews | ' . home_url( '/category/press-and-media/' ),
 				'Browse | What’s New at Inkfire | Latest projects, tips and behind-the-scenes updates | ' . home_url( '/category/news/' ),
 				'Browse | Mali TV | Short practical videos on tech, design and Inkfire life | https://www.youtube.com/@mali.and.m.e',
@@ -1464,7 +1476,7 @@ class Mobile_Header_Widget extends Widget_Base {
 					"\n",
 					array(
 						'Explore Blog | ' . home_url( '/blog/' ),
-						'Knowledge Base | https://help.inkfire.co.uk/',
+						'Knowledge Base | https://help.mediumblue-seal-942128.hostingersite.com/',
 						'Case Studies | ' . home_url( '/portfolio/' ),
 					)
 				),

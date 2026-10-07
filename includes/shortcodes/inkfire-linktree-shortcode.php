@@ -104,7 +104,7 @@ if ( ! function_exists( 'amh_social_quicklinks_defaults' ) ) {
 			'newsletter_copy'    => 'Get our latest updates, opportunities, and behind-the-scenes thoughts without having to go looking for them.',
 			'newsletter_note'    => 'We keep it human, occasional, and worth opening.',
 			'contact_phone'      => '+44 (0)333 613 4653',
-			'contact_email'      => 'hello@inkfire.co.uk',
+			'contact_email'      => 'hello@mediumblue-seal-942128.hostingersite.com',
 			'contact_address'    => '9 Kingswell Road, Ensbury Park, Bournemouth, BH10 5DF',
 			'contact_hours'      => 'Mon – Fri, 9am – 5pm (UK time)',
 			'company_number'     => '15153305',

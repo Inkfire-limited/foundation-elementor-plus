@@ -1030,3 +1030,117 @@
     display: inline-flex;
   }
 }
+
+/* Compact social/project actions. Containment stays on the bar, never the
+   header root: the fixed menu must remain positioned against the viewport. */
+.inkfire-mobile-header .imh-topbar {
+  container: imh-topbar / inline-size;
+}
+.inkfire-mobile-header .imh-header-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 10px;
+  min-width: 0;
+}
+.inkfire-mobile-header .imh-topbar-socials {
+  display: none;
+  align-items: center;
+  gap: 2px;
+  padding-inline-end: 10px;
+  border-inline-end: 1px solid rgba(255,255,255,0.14);
+}
+.inkfire-mobile-header .imh-topbar-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 14px;
+  color: #eaeaf0;
+  background: transparent;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+.inkfire-mobile-header .imh-topbar-social--extra {
+  display: none;
+}
+.inkfire-mobile-header .imh-topbar-social svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+  pointer-events: none;
+}
+.inkfire-mobile-header .imh-topbar-social:hover {
+  background: rgba(255,255,255,0.09);
+  color: #ffffff;
+}
+/* Share the search/menu button geometry and shadow via .imh-icon-button.
+   Only the project colour and its optional tablet label differ. */
+.inkfire-mobile-header .imh-project-cta {
+  gap: 8px;
+  border-color: rgba(133,225,204,0.38);
+  border-top-color: rgba(213,255,245,0.44);
+  background: linear-gradient(135deg, #0a3b39 0%, #154d52 48%, #087b69 100%);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.inkfire-mobile-header .imh-project-cta:hover {
+  color: #ffffff;
+  border-color: #78d5c1;
+}
+.inkfire-mobile-header .imh-project-cta__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  font-size: 20px;
+  font-style: normal;
+  line-height: 1;
+  pointer-events: none;
+}
+.inkfire-mobile-header .imh-project-cta__label { display: none; max-inline-size: 14ch; overflow: hidden; text-overflow: ellipsis; }
+.inkfire-mobile-header .imh-project-cta:focus-visible,
+.inkfire-mobile-header .imh-topbar-social:focus-visible {
+  outline: 2px solid #42dfd0;
+  outline-offset: 3px;
+}
+@container imh-topbar (min-width: 480px) {
+  .inkfire-mobile-header .imh-project-cta { width: auto; padding-inline: 16px; border-radius: 999px; }
+  .inkfire-mobile-header .imh-project-cta__label { display: inline; }
+}
+@container imh-topbar (min-width: 640px) {
+  .inkfire-mobile-header .imh-topbar-socials { display: flex; }
+}
+@container imh-topbar (min-width: 800px) {
+  .inkfire-mobile-header .imh-topbar-social--extra { display: inline-flex; }
+}
+@container imh-topbar (max-width: 300px) {
+  .inkfire-mobile-header .imh-project-cta,
+  .inkfire-mobile-header .imh-icon-button { width: 44px; min-width: 44px; height: 44px; min-height: 44px; border-radius: 16px; }
+  .inkfire-mobile-header .imh-home .imh-logo { max-width: 100%; }
+}
+/* Safe viewport fallback for engines without container queries. */
+@supports not (container-type: inline-size) {
+  @media (min-width: 560px) {
+    .inkfire-mobile-header .imh-project-cta { width: auto; padding-inline: 16px; border-radius: 999px; }
+    .inkfire-mobile-header .imh-project-cta__label { display: inline; }
+  }
+  @media (min-width: 720px) { .inkfire-mobile-header .imh-topbar-socials { display: flex; } }
+  @media (min-width: 920px) { .inkfire-mobile-header .imh-topbar-social--extra { display: inline-flex; } }
+  @media (max-width: 359px) {
+    .inkfire-mobile-header .imh-project-cta,
+    .inkfire-mobile-header .imh-icon-button { width: 44px; min-width: 44px; height: 44px; min-height: 44px; }
+    .inkfire-mobile-header .imh-home .imh-logo { max-width: 100%; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inkfire-mobile-header .imh-project-cta,
+  .inkfire-mobile-header .imh-topbar-social { transition: none; }
+}
