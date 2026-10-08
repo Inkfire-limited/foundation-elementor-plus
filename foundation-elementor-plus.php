@@ -3,7 +3,7 @@
  * Plugin Name: Foundation Elementor Plus
  * Plugin URI: https://github.com/Inkfire-limited/foundation-elementor-plus
  * Description: Modular custom Elementor widgets for Foundation sites.
- * Version: 1.3.46
+ * Version: 1.3.47
  * Author: Sonny x Inkfire
  * Text Domain: foundation-elementor-plus
  * Update URI: https://github.com/Inkfire-limited/foundation-elementor-plus
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FOUNDATION_ELEMENTOR_PLUS_VERSION', '1.3.46' );
+define( 'FOUNDATION_ELEMENTOR_PLUS_VERSION', '1.3.47' );
 define( 'FOUNDATION_ELEMENTOR_PLUS_FILE', __FILE__ );
 define( 'FOUNDATION_ELEMENTOR_PLUS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'FOUNDATION_ELEMENTOR_PLUS_URL', plugin_dir_url( __FILE__ ) );

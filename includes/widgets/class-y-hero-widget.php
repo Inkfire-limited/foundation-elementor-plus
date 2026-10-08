@@ -54,6 +54,7 @@ class Y_Hero_Widget extends Widget_Base {
 
 	protected function render() {
 		$settings      = $this->get_settings_for_display();
+		$heading_tag   = isset( $settings['heading_tag'] ) && in_array( $settings['heading_tag'], array( 'h1', 'h2', 'h3' ), true ) ? $settings['heading_tag'] : 'h1';
 		$cards         = ! empty( $settings['cards'] ) && is_array( $settings['cards'] ) ? array_values( $settings['cards'] ) : array();
 		$stats         = ! empty( $settings['stats'] ) && is_array( $settings['stats'] ) ? array_values( $settings['stats'] ) : array();
 		$widget_id     = 'foundation-y-hero-' . $this->get_id();
@@ -115,7 +116,7 @@ class Y_Hero_Widget extends Widget_Base {
 
 					<div class="foundation-y-hero__right">
 						<?php if ( ! empty( $settings['heading'] ) ) : ?>
-							<h1><?php echo wp_kses_post( nl2br( esc_html( $settings['heading'] ) ) ); ?></h1>
+							<<?php echo esc_attr( $heading_tag ); ?>><?php echo wp_kses_post( nl2br( esc_html( $settings['heading'] ) ) ); ?></<?php echo esc_attr( $heading_tag ); ?>>
 						<?php endif; ?>
 
 						<?php if ( ! empty( $settings['intro'] ) ) : ?>
@@ -200,6 +201,16 @@ class Y_Hero_Widget extends Widget_Base {
 				'dynamic'     => array(
 					'active' => true,
 				),
+			)
+		);
+
+		$this->add_control(
+			'heading_tag',
+			array(
+				'label'   => esc_html__( 'Heading HTML Tag', 'foundation-elementor-plus' ),
+				'type'    => Controls_Manager::SELECT,
+				'default' => 'h1',
+				'options' => array( 'h1' => 'H1', 'h2' => 'H2', 'h3' => 'H3' ),
 			)
 		);
 
@@ -1397,7 +1408,7 @@ class Y_Hero_Widget extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'default'   => '#202233',
 				'selectors' => array(
-					'{{WRAPPER}} .foundation-y-hero__right h1' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .foundation-y-hero__right :is(h1, h2, h3)' => 'color: {{VALUE}};',
 				),
 			)
 		);
@@ -1406,7 +1417,7 @@ class Y_Hero_Widget extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			array(
 				'name'     => 'heading_typography',
-				'selector' => '{{WRAPPER}} .foundation-y-hero__right h1',
+				'selector' => '{{WRAPPER}} .foundation-y-hero__right :is(h1, h2, h3)',
 			)
 		);
 
@@ -1435,7 +1446,7 @@ class Y_Hero_Widget extends Widget_Base {
 					),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}} .foundation-y-hero__right h1' => 'max-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .foundation-y-hero__right :is(h1, h2, h3)' => 'max-width: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
