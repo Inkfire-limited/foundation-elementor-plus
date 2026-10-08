@@ -4,7 +4,7 @@ Tags: elementor, widgets, agency, design
 Requires at least: 6.4
 Tested up to: 6.9.4
 Requires PHP: 7.4
-Stable tag: 1.3.46
+Stable tag: 1.3.47
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ Key points:
 
 This plugin includes a built-in GitHub updater aimed at the repository:
 
-`hawks010/foundation-elementor-plus`
+`Inkfire-limited/foundation-elementor-plus`
 
 Recommended release flow:
 
@@ -60,6 +60,10 @@ Yes. Add this to `wp-config.php` before deleting the plugin:
 `define( 'FOUNDATION_ELEMENTOR_PLUS_PRESERVE_DATA', true );`
 
 == Changelog ==
+
+= 1.3.47 =
+* Added an H1/H2/H3 control to Y Hero so sections below a page hero can use a secondary heading. Existing widgets retain H1 until explicitly changed.
+* Preserved Y Hero typography across all supported heading tags.
 
 = 1.3.46 =
 * Removed the Social posts navigation pill from the Inkfire In Action mega menu.
