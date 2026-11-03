@@ -462,6 +462,11 @@
 	transition: transform 0.42s ease;
 }
 
+/* Elementor's `.elementor img { height: auto }` outranks the single class above, which left photos as a band at the top of tall cards. */
+.foundation-awards-wall img.foundation-awards-wall__cover {
+	height: 100%;
+}
+
 .foundation-awards-wall__image-link:hover .foundation-awards-wall__cover,
 .foundation-awards-wall__photo-link:hover .foundation-awards-wall__cover,
 .foundation-awards-wall__image-link:focus-visible .foundation-awards-wall__cover,
@@ -597,30 +602,19 @@
 		inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
-.foundation-awards-wall--posts .foundation-awards-wall__card--image .foundation-awards-wall__cover,
-.foundation-awards-wall--posts .foundation-awards-wall__card--photo .foundation-awards-wall__cover {
-	filter: saturate(0.96) contrast(1.02) brightness(0.82);
-}
-
+/* Keep photography at full strength; the scrim only darkens the lower band where text sits. */
 .foundation-awards-wall--posts .foundation-awards-wall__card--image .foundation-awards-wall__scrim,
 .foundation-awards-wall--posts .foundation-awards-wall__card--photo .foundation-awards-wall__scrim {
 	gap: 8px;
 	padding-top: clamp(84px, 18%, 148px);
-	background:
-		linear-gradient(
-			180deg,
-			rgba(3, 10, 18, 0.12) 0%,
-			rgba(3, 10, 18, 0.18) 18%,
-			rgba(3, 10, 18, 0.42) 42%,
-			rgba(3, 10, 18, 0.78) 70%,
-			rgba(3, 10, 18, 0.96) 100%
-		),
-		linear-gradient(
-			90deg,
-			rgba(3, 10, 18, 0.22) 0%,
-			rgba(3, 10, 18, 0.08) 36%,
-			rgba(3, 10, 18, 0.28) 100%
-		);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 10, 18, 0) 0%,
+		rgba(3, 10, 18, 0) 34%,
+		rgba(3, 10, 18, 0.5) 58%,
+		rgba(3, 10, 18, 0.82) 78%,
+		rgba(3, 10, 18, 0.94) 100%
+	);
 }
 
 .foundation-awards-wall--posts .foundation-awards-wall__card--image .foundation-awards-wall__eyebrow,
@@ -692,21 +686,14 @@
 .foundation-awards-wall--posts .foundation-awards-wall__card--size-compact .foundation-awards-wall__scrim {
 	gap: 8px;
 	padding-top: clamp(76px, 22%, 124px);
-	background:
-		linear-gradient(
-			180deg,
-			rgba(3, 10, 18, 0.1) 0%,
-			rgba(3, 10, 18, 0.16) 22%,
-			rgba(3, 10, 18, 0.34) 48%,
-			rgba(3, 10, 18, 0.68) 78%,
-			rgba(3, 10, 18, 0.88) 100%
-		),
-		linear-gradient(
-			90deg,
-			rgba(3, 10, 18, 0.18) 0%,
-			rgba(3, 10, 18, 0.05) 40%,
-			rgba(3, 10, 18, 0.22) 100%
-		);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 10, 18, 0) 0%,
+		rgba(3, 10, 18, 0) 38%,
+		rgba(3, 10, 18, 0.5) 62%,
+		rgba(3, 10, 18, 0.82) 80%,
+		rgba(3, 10, 18, 0.92) 100%
+	);
 }
 
 .foundation-awards-wall--posts .foundation-awards-wall__card--size-compact .foundation-awards-wall__card-title {

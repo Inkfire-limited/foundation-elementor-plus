@@ -4,7 +4,7 @@ Tags: elementor, widgets, agency, design
 Requires at least: 6.4
 Tested up to: 6.9.4
 Requires PHP: 7.4
-Stable tag: 1.3.47
+Stable tag: 1.3.48
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,11 @@ Yes. Add this to `wp-config.php` before deleting the plugin:
 `define( 'FOUNDATION_ELEMENTOR_PLUS_PRESERVE_DATA', true );`
 
 == Changelog ==
+
+= 1.3.48 =
+* Awards wall (dynamic posts): with Compact Incomplete Blocks on, posts no longer fill the full-width slot, and half-built later blocks or partial rows are left out instead of falling back to full-width cards. The metro shape now holds as more posts are published.
+* Awards wall (dynamic posts): removed the brightness filter and side-to-side scrim on photo cards. The scrim now only darkens the lower band behind the text, so photography shows at full strength.
+* Awards wall: photo covers fill their cards again. Elementor's `.elementor img { height: auto }` had been overriding the cover height, which left photos as a band at the top of taller cards.
 
 = 1.3.47 =
 * Added an H1/H2/H3 control to Y Hero so sections below a page hero can use a secondary heading. Existing widgets retain H1 until explicitly changed.

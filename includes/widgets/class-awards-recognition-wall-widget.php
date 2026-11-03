@@ -1136,10 +1136,16 @@ class Awards_Recognition_Wall_Widget extends Base_Widget {
 	private function prepare_post_cards( array $settings ) {
 		$slots      = array_keys( $this->get_slot_map() );
 		$a11y_slot  = 'yes' === ( $settings['posts_include_a11y_card'] ?? '' ) ? (string) ( $settings['posts_a11y_slot'] ?? 'b1_full' ) : '';
+		$compact    = 'yes' === ( $settings['posts_compact_incomplete_blocks'] ?? 'yes' );
 		$post_slots = array_values(
 			array_filter(
 				$slots,
-				static function( $slot ) use ( $a11y_slot ) {
+				static function( $slot ) use ( $a11y_slot, $compact ) {
+					// Compact walls keep posts inside the metro shape instead of spilling into full-width slots.
+					if ( $compact && '_full' === substr( $slot, -5 ) ) {
+						return false;
+					}
+
 					return $slot !== $a11y_slot;
 				}
 			)
@@ -1226,6 +1232,10 @@ class Awards_Recognition_Wall_Widget extends Base_Widget {
 			);
 		}
 
+		if ( $compact ) {
+			$raw_cards = $this->trim_incomplete_post_blocks( $raw_cards, $a11y_slot );
+		}
+
 		if ( 'yes' === ( $settings['posts_include_a11y_card'] ?? '' ) && '' !== $a11y_slot ) {
 			$raw_cards[] = array(
 				'admin_label'    => esc_html__( 'Accessibility Tools', 'foundation-elementor-plus' ),
@@ -1243,6 +1253,55 @@ class Awards_Recognition_Wall_Widget extends Base_Widget {
 		wp_reset_postdata();
 
 		return $this->prepare_cards( $raw_cards );
+	}
+
+	/**
+	 * Drop dynamic post cards that would leave a block half-built.
+	 *
+	 * A block needs its feature and both stack cards to hold the metro shape, and its rows
+	 * only render as a set of three. Leftovers would otherwise fall back to full-width cards.
+	 * An unfinished block 1 is kept as-is, so a wall with only a few posts still shows them.
+	 */
+	private function trim_incomplete_post_blocks( array $raw_cards, $a11y_slot ) {
+		$slot_map = $this->get_slot_map();
+		$roles    = array();
+
+		foreach ( $raw_cards as $card ) {
+			$slot = $slot_map[ $card['layout_slot'] ] ?? null;
+
+			if ( $slot ) {
+				$roles[ $slot['block'] ][ $slot['role'] ] = true;
+			}
+		}
+
+		if ( '' !== $a11y_slot && isset( $slot_map[ $a11y_slot ] ) ) {
+			$roles[ $slot_map[ $a11y_slot ]['block'] ][ $slot_map[ $a11y_slot ]['role'] ] = true;
+		}
+
+		return array_values(
+			array_filter(
+				$raw_cards,
+				static function( $card ) use ( $slot_map, $roles ) {
+					$slot = $slot_map[ $card['layout_slot'] ] ?? null;
+
+					if ( ! $slot ) {
+						return true;
+					}
+
+					$present = $roles[ $slot['block'] ] ?? array();
+
+					if ( empty( $present['feature'] ) || empty( $present['stack_top'] ) || empty( $present['stack_bottom'] ) ) {
+						return 1 === $slot['block'];
+					}
+
+					if ( 0 === strpos( $slot['role'], 'row_' ) ) {
+						return ! empty( $present['row_1'] ) && ! empty( $present['row_2'] ) && ! empty( $present['row_3'] );
+					}
+
+					return true;
+				}
+			)
+		);
 	}
 
 	private function normalize_posts_orderby( $value ) {
