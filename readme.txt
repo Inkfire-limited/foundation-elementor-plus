@@ -4,7 +4,7 @@ Tags: elementor, widgets, agency, design
 Requires at least: 6.4
 Tested up to: 6.9.4
 Requires PHP: 7.4
-Stable tag: 1.3.48
+Stable tag: 1.3.49
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,15 @@ Yes. Add this to `wp-config.php` before deleting the plugin:
 `define( 'FOUNDATION_ELEMENTOR_PLUS_PRESERVE_DATA', true );`
 
 == Changelog ==
+
+= 1.3.49 =
+* Awards wall: new per-card Image Fit control (Auto / Fill / Show whole). Auto shows artwork cards whole and fills photo cards, so portrait posters are no longer cropped in landscape slots.
+* Awards wall: new Video Aspect Ratio control (default 16:9). Embedded videos keep their shape instead of stretching to the leftover feature space.
+* Awards wall: Full Width cards span the whole grid. They had covered only two of the three columns.
+* Awards wall: the two stack cards share the feature height evenly, and logos scale to the space available.
+* Awards wall: feature cards size from their media area (Feature Media Min Height, default 420px) instead of the photo's natural size, which had pushed some features past 1,100px tall.
+* Awards wall: text cards keep the eyebrow at the top and sit the title, meta and text on the bottom edge.
+* Awards wall: photo cards on the white surface keep white text on their scrim. The orange surface is now a deeper ember with solid white text, meeting WCAG AA contrast (it measured 2.5:1 before).
 
 = 1.3.48 =
 * Awards wall (dynamic posts): with Compact Incomplete Blocks on, posts no longer fill the full-width slot, and half-built later blocks or partial rows are left out instead of falling back to full-width cards. The metro shape now holds as more posts are published.

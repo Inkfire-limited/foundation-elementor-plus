@@ -120,6 +120,15 @@
 		"stack-bottom feature feature";
 }
 
+/* Share the feature's height equally between the two stack cards. */
+.foundation-awards-wall__block--with-rows:not(.foundation-awards-wall__block--fallback) .foundation-awards-wall__block-grid {
+	grid-template-rows: 1fr 1fr auto;
+}
+
+.foundation-awards-wall__block--without-rows:not(.foundation-awards-wall__block--fallback) .foundation-awards-wall__block-grid {
+	grid-template-rows: 1fr 1fr;
+}
+
 .foundation-awards-wall__block--fallback .foundation-awards-wall__block-grid {
 	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 	grid-template-areas: none;
@@ -132,7 +141,7 @@
 }
 
 .foundation-awards-wall__full-stack .foundation-awards-wall__card {
-	grid-column: 1 / span 2;
+	grid-column: 1 / -1;
 }
 
 .foundation-awards-wall__card {
@@ -276,16 +285,21 @@
 	padding: 0 var(--foundation-awards-card-padding-right) var(--foundation-awards-card-padding-bottom) var(--foundation-awards-card-padding-left);
 }
 
+/* The media area sets the feature height (Feature Media Min Height control), not the photo's natural size. */
 .foundation-awards-wall__feature-media-link {
+	position: relative;
 	display: block;
 	width: 100%;
 	height: 100%;
+	min-height: 420px;
 }
 
-.foundation-awards-wall__feature-image {
+/* Two classes so Elementor's `.elementor img { height: auto }` cannot override the fill. */
+.foundation-awards-wall .foundation-awards-wall__feature-image {
+	position: absolute;
+	inset: 0;
 	width: 100%;
 	height: 100%;
-	min-height: 320px;
 	border-radius: 24px;
 	box-shadow: 0 18px 42px rgba(2, 7, 18, 0.28);
 	object-fit: cover;
@@ -409,11 +423,12 @@
 	letter-spacing: 0.05em;
 }
 
+/* Keep the video's own shape (Video Aspect Ratio control) rather than stretching it to the leftover space. */
 .foundation-awards-wall__embed {
 	position: relative;
+	align-self: center;
 	width: 100%;
-	height: 100%;
-	min-height: 320px;
+	aspect-ratio: 16 / 9;
 	border: 1px solid rgba(255, 255, 255, 0.12);
 	border-radius: 24px;
 	background: rgba(0, 0, 0, 0.26);
@@ -429,18 +444,20 @@
 	border: 0;
 }
 
+/* The logo fills whatever space the card leaves, so logo cards can share a stack evenly. */
 .foundation-awards-wall__logo-pane {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 190px;
-	margin-top: auto;
-	padding-top: 18px;
+	position: relative;
+	flex: 1 1 0;
+	min-height: 120px;
+	margin-top: 18px;
 }
 
-.foundation-awards-wall__logo-pane img {
+.foundation-awards-wall .foundation-awards-wall__logo-pane img {
+	position: absolute;
+	inset: 0;
 	width: 100%;
-	max-height: 240px;
+	height: 100%;
+	max-height: none;
 	object-fit: contain;
 }
 
@@ -465,6 +482,22 @@
 /* Elementor's `.elementor img { height: auto }` outranks the single class above, which left photos as a band at the top of tall cards. */
 .foundation-awards-wall img.foundation-awards-wall__cover {
 	height: 100%;
+}
+
+/* Image Fit control: Auto resolves to contain for artwork cards and cover for photos. */
+.foundation-awards-wall__card--fit-contain .foundation-awards-wall__cover,
+.foundation-awards-wall__card--fit-contain .foundation-awards-wall__feature-image {
+	object-fit: contain;
+}
+
+.foundation-awards-wall__card--fit-cover .foundation-awards-wall__cover,
+.foundation-awards-wall__card--fit-cover .foundation-awards-wall__feature-image {
+	object-fit: cover;
+}
+
+/* Text cards: eyebrow stays at the top, the rest sits on the bottom edge. */
+.foundation-awards-wall__card--type-text .foundation-awards-wall__card-title {
+	margin-top: auto;
 }
 
 .foundation-awards-wall__image-link:hover .foundation-awards-wall__cover,
@@ -513,17 +546,24 @@
 		0 10px 30px rgba(0, 0, 0, 0.34);
 }
 
+/* Deep ember keeps white text at WCAG AA (about 4.7:1 at the lightest point). The solid colour is the fallback while Elementor lazy-loads backgrounds. */
 .foundation-awards-wall__card--surface-orange { --foundation-awards-hover: #f18e5c; }
 .foundation-awards-wall__card--surface-orange .foundation-awards-wall__card-inner {
 	background:
-		radial-gradient(420px 160px at 18% 0%, rgba(255, 255, 255, 0.16), transparent 60%),
-		linear-gradient(138deg, rgba(215, 104, 0, 0.62) 0%, rgba(190, 62, 44, 0.65) 100%),
-		#f5977a;
+		radial-gradient(420px 160px at 18% 0%, rgba(255, 255, 255, 0.08), transparent 60%),
+		linear-gradient(138deg, #b24a10 0%, #9e3a2a 100%),
+		#b24a10;
 	border-color: rgba(215, 104, 0, 0.34);
 	border-top-color: rgba(255, 255, 255, 0.26);
 	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(215, 104, 0, 0.1);
 	backdrop-filter: blur(14px);
 	-webkit-backdrop-filter: blur(14px);
+}
+
+.foundation-awards-wall__card--surface-orange .foundation-awards-wall__eyebrow,
+.foundation-awards-wall__card--surface-orange .foundation-awards-wall__meta,
+.foundation-awards-wall__card--surface-orange .foundation-awards-wall__text {
+	color: #fff;
 }
 
 .foundation-awards-wall__card--surface-dark { --foundation-awards-hover: #bcb7d8; }
@@ -572,11 +612,12 @@
 	-webkit-backdrop-filter: blur(18px);
 }
 
-.foundation-awards-wall__card--surface-white .foundation-awards-wall__eyebrow,
-.foundation-awards-wall__card--surface-white .foundation-awards-wall__card-title,
-.foundation-awards-wall__card--surface-white .foundation-awards-wall__meta,
-.foundation-awards-wall__card--surface-white .foundation-awards-wall__text,
-.foundation-awards-wall__card--surface-white .foundation-awards-wall__text p {
+/* Dark text only where the white surface is visible; photo cards keep white text on their scrim. */
+.foundation-awards-wall__card--surface-white:not(.foundation-awards-wall__card--photo) .foundation-awards-wall__eyebrow,
+.foundation-awards-wall__card--surface-white:not(.foundation-awards-wall__card--photo) .foundation-awards-wall__card-title,
+.foundation-awards-wall__card--surface-white:not(.foundation-awards-wall__card--photo) .foundation-awards-wall__meta,
+.foundation-awards-wall__card--surface-white:not(.foundation-awards-wall__card--photo) .foundation-awards-wall__text,
+.foundation-awards-wall__card--surface-white:not(.foundation-awards-wall__card--photo) .foundation-awards-wall__text p {
 	color: #192133;
 }
 
@@ -844,8 +885,9 @@
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
-	.foundation-awards-wall__full-stack .foundation-awards-wall__card {
-		grid-column: 1 / -1;
+	.foundation-awards-wall__block--with-rows:not(.foundation-awards-wall__block--fallback) .foundation-awards-wall__block-grid,
+	.foundation-awards-wall__block--without-rows:not(.foundation-awards-wall__block--fallback) .foundation-awards-wall__block-grid {
+		grid-template-rows: none;
 	}
 
 	.foundation-awards-wall__card--feature .foundation-awards-wall__card-inner {
@@ -908,6 +950,15 @@
 
 	.foundation-awards-wall__card-inner {
 		min-height: auto;
+	}
+
+	.foundation-awards-wall__logo-pane {
+		flex-basis: auto;
+		min-height: 160px;
+	}
+
+	.foundation-awards-wall__feature-media-link {
+		min-height: 280px;
 	}
 
 	.foundation-awards-wall__full-stack {

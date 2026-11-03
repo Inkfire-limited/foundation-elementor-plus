@@ -575,6 +575,24 @@ class Awards_Recognition_Wall_Widget extends Base_Widget {
 		);
 
 		$repeater->add_control(
+			'media_image_fit',
+			array(
+				'label'       => esc_html__( 'Image Fit', 'foundation-elementor-plus' ),
+				'type'        => Controls_Manager::SELECT,
+				'default'     => '',
+				'options'     => array(
+					''        => esc_html__( 'Auto', 'foundation-elementor-plus' ),
+					'cover'   => esc_html__( 'Fill (crop to card)', 'foundation-elementor-plus' ),
+					'contain' => esc_html__( 'Show whole image', 'foundation-elementor-plus' ),
+				),
+				'description' => esc_html__( 'Auto fills the card with photos and shows artwork cards whole.', 'foundation-elementor-plus' ),
+				'condition'   => array(
+					'media_mode' => array( 'image' ),
+				),
+			)
+		);
+
+		$repeater->add_control(
 			'media_embed_url',
 			array(
 				'label'       => esc_html__( 'Embed URL', 'foundation-elementor-plus' ),
@@ -787,7 +805,26 @@ class Awards_Recognition_Wall_Widget extends Base_Widget {
 					),
 				),
 				'selectors'  => array(
-					'{{WRAPPER}} .foundation-awards-wall__feature-image' => 'min-height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .foundation-awards-wall__feature-media-link' => 'min-height: {{SIZE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'embed_aspect_ratio',
+			array(
+				'label'     => esc_html__( 'Video Aspect Ratio', 'foundation-elementor-plus' ),
+				'type'      => Controls_Manager::SELECT,
+				'default'   => '16 / 9',
+				'options'   => array(
+					'16 / 9' => '16:9',
+					'21 / 9' => '21:9',
+					'4 / 3'  => '4:3',
+					'1 / 1'  => '1:1',
+					'9 / 16' => '9:16',
+				),
+				'selectors' => array(
+					'{{WRAPPER}} .foundation-awards-wall__embed' => 'aspect-ratio: {{VALUE}};',
 				),
 			)
 		);
@@ -1398,6 +1435,7 @@ class Awards_Recognition_Wall_Widget extends Base_Widget {
 				'media_mode'  => $this->normalize_media_mode( $card['media_mode'] ?? 'image' ),
 				'image_url'   => isset( $card['media_image_url'] ) ? (string) $card['media_image_url'] : '',
 				'image_alt'   => isset( $card['media_image_alt'] ) ? (string) $card['media_image_alt'] : '',
+				'image_fit'   => in_array( $card['media_image_fit'] ?? '', array( 'cover', 'contain' ), true ) ? $card['media_image_fit'] : '',
 				'embed_url'   => isset( $card['media_embed_url'] ) ? (string) $card['media_embed_url'] : '',
 				'embed_title' => isset( $card['media_embed_title'] ) ? (string) $card['media_embed_title'] : '',
 			);
@@ -1572,6 +1610,19 @@ class Awards_Recognition_Wall_Widget extends Base_Widget {
 
 		if ( 'shortcode' === $card['type'] ) {
 			$classes[] = 'foundation-awards-wall__card--shortcode';
+		}
+
+		if ( ! empty( $card['image_url'] ) && in_array( $card['type'], array( 'image', 'photo', 'feature' ), true ) ) {
+			$fit = $card['image_fit'];
+
+			// Feature cards leave Auto to the widget-level Feature Media Fit control.
+			if ( '' === $fit && 'feature' !== $card['type'] ) {
+				$fit = 'image' === $card['type'] ? 'contain' : 'cover';
+			}
+
+			if ( '' !== $fit ) {
+				$classes[] = 'foundation-awards-wall__card--fit-' . $fit;
+			}
 		}
 		?>
 		<article class="<?php echo esc_attr( implode( ' ', $classes ) ); ?>" data-foundation-awards-hover role="listitem" aria-labelledby="<?php echo esc_attr( $card_id ); ?>">
